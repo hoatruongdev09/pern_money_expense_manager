@@ -7,7 +7,8 @@ const authorize = async (req, res, next) => {
         const authToken = req.headers['authorization'] || ''
         const token = authToken.split(' ')[1]
         if (token == null || token == '') {
-            return error.unauthorized(res, 'Unauthorized')
+            next()
+            return
         }
         const payload = jwt.verify(token, process.env.jwtSecret)
         req.user = payload.user

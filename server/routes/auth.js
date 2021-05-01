@@ -25,7 +25,11 @@ Router.post('/register', validRegiserInfo, async (req, res) => {
         const user = await db.query('INSERT INTO users(user_name,user_email,user_phone,user_address,user_password) VALUES($1,$2,$3,$4,$5) RETURNING*',
             [user_name, email, phone, address, bcryptPassword])
 
-        const token = tokenGenerator(user.rows[0].user_id)
+        const payload = {
+            user_id: user.rows[0].user_id,
+            is_admin: false
+        }
+        const token = tokenGenerator(payload)
 
         return res.json({ token })
     } catch (err) {
@@ -46,7 +50,11 @@ Router.post('/login', validLoginInfo, async (req, res) => {
         if (!compareResult) {
             return error.unauthorized(res, "Email, phone or password incorrect")
         }
-        const token = tokenGenerator(users.rows[0].user_id)
+        const payload = {
+            user_id: users.rows[0].user_id,
+            is_admin: users.rows[0].is_admin
+        }
+        const token = tokenGenerator(payload)
         return res.json({ token })
     } catch (err) {
         console.log(err)
