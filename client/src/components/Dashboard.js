@@ -1,19 +1,25 @@
 import { Fragment, useState } from "react";
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
-function Dashboard() {
+import MainDashboard from "./Dashboard/MainDashboard";
+
+function Dashboard({ Render }) {
   const [toggleSideBar, setToggleSideBar] = useState(false);
 
   const activeToggleSideBar = (e) => {
     e.preventDefault();
-    const bigBody = document.getElementById("page-top");
-    // bigBody.classList.toggle("sidebar-toggled");
-
     setToggleSideBar(!toggleSideBar);
-    console.log("wtf pls 4");
   };
+
   return (
     <Fragment>
       <div
@@ -26,7 +32,12 @@ function Dashboard() {
             toggleSidebar={activeToggleSideBar}
           />
           <div id="content-wrapper" className="d-flex flex-column">
-            <TopBar toggleSidebar={activeToggleSideBar} />
+            <div id="content">
+              <TopBar toggleSidebar={activeToggleSideBar} />
+              <div className="container-fluid">
+                <Render />
+              </div>
+            </div>
           </div>
         </div>
       </div>

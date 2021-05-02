@@ -16,6 +16,8 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 
+import MainDashboard from "./components/Dashboard/MainDashboard";
+
 function App() {
   const [isAuthenticate, setAuthenticate] = useState(false);
 
@@ -29,7 +31,6 @@ function App() {
         method: "GET",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      const parsedResponse = await response.json();
       if (response.status !== 200) {
         setAuthenticate(false);
       } else {
@@ -65,7 +66,7 @@ function App() {
               !isAuthenticate ? (
                 <Register {...props} setAuth={setAuth} />
               ) : (
-                <Redirect to="/dashboard" />
+                <Redirect {...props} to="/dashboard" />
               )
             }
           />
@@ -74,7 +75,11 @@ function App() {
             path="/dashboard"
             render={(props) =>
               isAuthenticate ? (
-                <Dashboard {...props} setAuth={setAuth} />
+                <Dashboard
+                  {...props}
+                  Render={MainDashboard}
+                  setAuth={setAuth}
+                />
               ) : (
                 <Redirect to="/login" />
               )
