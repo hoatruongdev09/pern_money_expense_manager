@@ -1,18 +1,11 @@
 import { Fragment, useState } from "react";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import MainDashboard from "./Dashboard/MainDashboard";
 
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
-import MainDashboard from "./Dashboard/MainDashboard";
-
-function Dashboard({ Render }) {
+function Dashboard() {
   const [toggleSideBar, setToggleSideBar] = useState(false);
 
   const activeToggleSideBar = (e) => {
@@ -35,7 +28,7 @@ function Dashboard({ Render }) {
             <div id="content">
               <TopBar toggleSidebar={activeToggleSideBar} />
               <div className="container-fluid">
-                <Render />
+                <MainDashboard />
               </div>
             </div>
           </div>

@@ -23,18 +23,20 @@ function MainDashboard() {
 }
 function TotalTab() {
   return (
-    <div class="col-xl-4 col-md-4 mb-4">
-      <div class="card border-left-warning shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+    <div className="col-xl-4 col-md-4 mb-4">
+      <div className="card border-left-warning shadow h-100 py-2">
+        <div className="card-body">
+          <div className="row no-gutters align-items-center">
+            <div className="col mr-2">
+              <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
                 Total
               </div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+              <div className="h5 mb-0 font-weight-bold text-gray-800">
+                $40,000
+              </div>
             </div>
-            <div class="col-auto">
-              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            <div className="col-auto">
+              <i className="fas fa-dollar-sign fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
@@ -44,18 +46,20 @@ function TotalTab() {
 }
 function ExpenseTab() {
   return (
-    <div class="col-xl-4 col-md-4 mb-4">
-      <div class="card border-left-danger shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+    <div className="col-xl-4 col-md-4 mb-4">
+      <div className="card border-left-danger shadow h-100 py-2">
+        <div className="card-body">
+          <div className="row no-gutters align-items-center">
+            <div className="col mr-2">
+              <div className="text-xs font-weight-bold text-danger text-uppercase mb-1">
                 Expense
               </div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+              <div className="h5 mb-0 font-weight-bold text-gray-800">
+                $215,000
+              </div>
             </div>
-            <div class="col-auto">
-              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            <div className="col-auto">
+              <i className="fas fa-dollar-sign fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
@@ -66,18 +70,20 @@ function ExpenseTab() {
 
 function InComeTab() {
   return (
-    <div class="col-xl-4 col-md-4 mb-4">
-      <div class="card border-left-primary shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+    <div className="col-xl-4 col-md-4 mb-4">
+      <div className="card border-left-primary shadow h-100 py-2">
+        <div className="card-body">
+          <div className="row no-gutters align-items-center">
+            <div className="col mr-2">
+              <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                 Income
               </div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+              <div className="h5 mb-0 font-weight-bold text-gray-800">
+                $40,000
+              </div>
             </div>
-            <div class="col-auto">
-              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            <div className="col-auto">
+              <i className="fas fa-dollar-sign fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>

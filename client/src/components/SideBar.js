@@ -1,4 +1,5 @@
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
+import { Link } from "react-router-dom";
 
 function SideBar({ showSideBar, toggleSidebar }) {
   return (
@@ -9,9 +10,9 @@ function SideBar({ showSideBar, toggleSidebar }) {
         }`}
         id="accordionSidebar"
       >
-        <a
+        <Link
           className="sidebar-brand d-flex align-items-center justify-content-center"
-          href="index.html"
+          to="/dashboard"
         >
           <div className="sidebar-brand-icon rotate-n-15">
             <i className="fas fa-laugh-wink"></i>
@@ -19,15 +20,15 @@ function SideBar({ showSideBar, toggleSidebar }) {
           <div className="sidebar-brand-text mx-3">
             SB Admin <sup>2</sup>
           </div>
-        </a>
+        </Link>
 
         <hr className="sidebar-divider my-0" />
 
         <li className="nav-item active">
-          <a className="nav-link" href="index.html">
+          <Link className="nav-link" to="/dashboard">
             <i className="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
-          </a>
+          </Link>
         </li>
 
         <hr className="sidebar-divider" />
@@ -153,10 +154,10 @@ function SideBar({ showSideBar, toggleSidebar }) {
         </li>
 
         <li className="nav-item">
-          <a className="nav-link" href="tables.html">
+          <Link className="nav-link" to="/trans">
             <i className="fas fa-fw fa-table"></i>
-            <span>Tables</span>
-          </a>
+            <span>Trans</span>
+          </Link>
         </li>
 
         <hr className="sidebar-divider d-none d-md-block" />
