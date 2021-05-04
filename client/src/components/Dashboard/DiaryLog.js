@@ -93,7 +93,7 @@ function CardLog({ log }) {
     <div className="card mb-2">
       <LogDate log={log} />
       {log.records.map((record, index) => (
-        <LogRecord index={index} record={record} />
+        <LogRecord key={`card-record-${index}`} index={index} record={record} />
       ))}
     </div>
   );
@@ -128,8 +128,8 @@ function DiaryLog({ logs }) {
 
       <div className="row">
         <div className="col-lg-12">
-          {logMap.map((lg) => (
-            <CardLog log={lg} />
+          {logMap.map((lg, index) => (
+            <CardLog key={`card-log-${index}`} log={lg} />
           ))}
         </div>
       </div>

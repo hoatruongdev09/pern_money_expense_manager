@@ -18,7 +18,7 @@ const listDetailExpense = async (is_admin, user_id) => {
 const listExpenseMethod = async () => {
     try {
         const methods = await db.query("SELECT * FROM expense_method")
-        return methods.row
+        return methods.rows
     } catch (err) {
         throw err
     }
