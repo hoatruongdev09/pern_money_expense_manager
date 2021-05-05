@@ -1,14 +1,27 @@
 import { Fragment, useEffect, useState } from 'react'
+import DatePicker from 'react-datepicker'
 
 import Host from '../../AppURL'
+import './log.css'
 
-function CreateLog() {
+import 'react-datepicker/dist/react-datepicker.css'
+
+
+
+function CreateLog({ onCreateLog }) {
     const [expenseCategories, setExpenseCategories] = useState([])
     const [expenseMethods, setExpenseMethods] = useState([])
     const [expenseTypes, setExpenseTypes] = useState([])
 
+    const [selectedDate, setSelectedDate] = useState(new Date())
     const [selectedType, setSelectedType] = useState(0)
     const [selectedMethod, setSelectMethod] = useState(0)
+    const [selectedCategory, setSelectedCategory] = useState(0)
+
+    const [note, setNote] = useState('')
+    const [description, setDescription] = useState('')
+
+    const [amount, setAmount] = useState(0)
 
     useEffect(async () => {
         await fetchCategories()
@@ -82,6 +95,69 @@ function CreateLog() {
         e.preventDefault()
         setSelectMethod(id)
     }
+    const onChangeDate = (date) => {
+        setSelectedDate(date)
+    }
+    const onChangeCategory = (e) => {
+        e.preventDefault()
+        setSelectedCategory(e.target.value)
+    }
+    const onChangeAmount = (e) => {
+        e.preventDefault()
+        setAmount(e.target.value)
+    }
+    const onChangeNote = (e) => {
+        e.preventDefault()
+        setNote(e.target.value)
+    }
+    const onChangeDescription = (e) => {
+        e.preventDefault()
+        setDescription(e.target.value)
+    }
+    const submitFormAndClose = async (e) => {
+        e.preventDefault()
+        await submitFormAndClear(e)
+    }
+    const submitFormAndClear = async (e) => {
+        e.preventDefault()
+        const body = {
+            expense_type_id: selectedType,
+            category_id: selectedCategory,
+            money_amount: amount,
+            note: note,
+            detail: description,
+            method: selectedMethod
+        }
+        console.log(JSON.stringify(body))
+        try {
+            const response = await fetch(`${Host}/money_expense`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            })
+            const parsedRes = await response.json()
+            if (response.status === 200) {
+                onCreateLog({
+                    ...parsedRes,
+                    type_name: expenseTypes.find(type => type.id == selectedType).type_name,
+                    category_name: expenseCategories.find(category => category.id == selectedCategory).category_name,
+                    method_name: expenseMethods.find(method => method.id == selectedMethod).method_name
+                })
+                setNote('')
+                setDescription('')
+                setSelectedCategory(0)
+                return true
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error(error.message)
+            return false
+        }
+    }
     return (
         <Fragment>
             <button className="btn btn-danger rounded-circle" data-toggle="modal" data-target="#modalCreateLog"><i className="fa fa-plus" aria-hidden="true"></i></button>
@@ -89,7 +165,7 @@ function CreateLog() {
                 <div className="modal-dialog modal-dialog-centered" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLongTitle">Expense</h5>
+                            <h5 className="modal-title" id="exampleModalLongTitle">{selectedType === 0 ? "Expense" : expenseTypes.find(type => type.id === selectedType).type_name}</h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -109,7 +185,7 @@ function CreateLog() {
                                 <div className="form-group row">
                                     <label htmlFor="staticEmail" className="col-sm-3 col-form-label">Date</label>
                                     <div className="col-sm-9">
-                                        <input type="text" readOnly className="form-control-plaintext" id="staticEmail" value={new Date(Date.now()).toDateString()} />
+                                        <DatePicker className="form-control" selected={selectedDate} onChange={date => onChangeDate(date)} />
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -118,7 +194,7 @@ function CreateLog() {
                                         <div className="btn-group btn-group-sm w-100" role="group" aria-label="Expense Methods">
                                             {
                                                 expenseMethods.map((method) => (
-                                                    <button key={`button-method-${method.id}`} onClick={e => onChangeExpenseMethod(e, method.id)} type="button" class={`btn btn-${method.id == selectedMethod ? "outline-primary" : "secondary"} mx-1 rounded`}>{method.method_name}</button>
+                                                    <button key={`button-method-${method.id}`} onClick={e => onChangeExpenseMethod(e, method.id)} type="button" className={`btn btn-${method.id == selectedMethod ? "outline-primary" : "secondary"} mx-1 rounded`}>{method.method_name}</button>
                                                 ))
                                             }
                                         </div>
@@ -127,33 +203,40 @@ function CreateLog() {
                                 <div className="form-group row">
                                     <label className="col-sm-3 col-form-label">Category</label>
                                     <div className="col-sm-9">
-                                        <select className="form-control" id="exampleFormControlSelect1">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select className="form-control" id="exampleFormControlSelect1" onChange={e => onChangeCategory(e)}>
+                                            <option defaultValue={setSelectedCategory == 0}>Choose...</option>
+                                            {
+                                                expenseCategories.map(category => (
+                                                    <option defaultValue={category.id == selectedCategory} key={`category-option-${category.id}`} value={category.id}>{category.category_name}</option>
+                                                ))
+                                            }
                                         </select>
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <label htmlFor="expense-amount" className="col-sm-3 col-form-label">Amount</label>
+                                    <div className="col-sm-9">
+                                        <input type='number' id="expense-amount" onChange={e => onChangeAmount(e)} value={amount} className="form-control" />
                                     </div>
                                 </div>
                                 <div className="form-group row">
                                     <label htmlFor="expense-note" className="col-sm-3 col-form-label">Note</label>
                                     <div className="col-sm-9">
-                                        <textarea id="expense-note" className="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+                                        <textarea id="expense-note" onChange={e => onChangeNote(e)} value={note} className="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
                                     </div>
                                 </div>
                                 <hr />
                                 <div className="form-group row">
                                     <label htmlFor="expense-description" className="col-sm-3 col-form-label">Description</label>
                                     <div className="col-sm-9">
-                                        <textarea id="expense-description" className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <textarea id="expense-description" onChange={e => onChangeDescription(e)} value={description} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Save changes</button>
+                            <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={e => submitFormAndClose(e)}>Save</button>
+                            <button type="button" className="btn btn-warning" onClick={e => submitFormAndClear(e)}>Continue</button>
                         </div>
                     </div>
                 </div>

@@ -11,7 +11,7 @@ import Host from "../AppURL";
 
 function Dashboard() {
   const [toggleSideBar, setToggleSideBar] = useState(false);
-  const [logs, setLog] = useState([1, 2, 3, 4, 5, 6]);
+  const [logs, setLog] = useState([]);
 
   const activeToggleSideBar = (e) => {
     e.preventDefault();
@@ -39,6 +39,10 @@ function Dashboard() {
     await fetchLog();
   }, []);
 
+  const onCreateLog = (log) => {
+    setLog([log, ...logs])
+  }
+
   return (
     <Fragment>
       <div id="page-top" className={`big-body ${toggleSideBar ? "sidebar-toggled" : ""}`} >
@@ -60,7 +64,7 @@ function Dashboard() {
                   <div className="col-8"></div>
                   <div className="col-4">
                     <div className="float-right">
-                      <CreateLog />
+                      <CreateLog onCreateLog={log => onCreateLog(log)} />
                     </div>
                     <div className="float-right pr-1">
                       <CreateNote />
