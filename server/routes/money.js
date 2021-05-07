@@ -90,23 +90,24 @@ Router.post("/", authorize, async (req, res) => {
 
 Router.delete("/:id", authorize, async (req, res) => {
     try {
-        if (req.user.is_admin) {
-            const deletedCategory = await db.query(
-                "DELETE FROM money_expense WHERE id=$1)",
-                [req.params.id]
-            );
-            return res.json(deletedCategory.rowCount);
-        }
-        const deletedCategory = await db.query(
-            "DELETE FROM money_expense WHERE id=$1 AND user_id=$2)",
-            [req.params.id, req.user.user_id]
-        );
-        return res.json(deletedCategory.rowCount);
+        return res.json(await moneyProvider.deleteRecord(req.params.id, req.user.is_admin, req.user.user_id))
+        // if (req.user.is_admin) {
+        //     const deletedCategory = await db.query(
+        //         "DELETE FROM money_expense WHERE id=$1)",
+        //         [req.params.id]
+        //     );
+        //     return res.json(deletedCategory.rowCount);
+        // }
+        // const deletedCategory = await db.query(
+        //     "DELETE FROM money_expense WHERE id=$1 AND user_id=$2)",
+        //     [req.params.id, req.user.user_id]
+        // );
+        // return res.json(deletedCategory.rowCount);
     } catch (err) {
         error.internalError(res, err.message);
     }
 });
-Router.put("/id", authorize, async (req, res) => {
+Router.put("/:id", authorize, async (req, res) => {
     try {
         const id = req.params.id;
         const {

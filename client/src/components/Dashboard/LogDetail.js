@@ -6,7 +6,7 @@ import './log.css'
 
 import 'react-datepicker/dist/react-datepicker.css'
 
-function LogDetail({ record }) {
+function LogDetail({ record, onRemoveRecord, onUpdateRecord }) {
     const [lastRecord, setLastRecord] = useState(null)
 
     const [expenseCategories, setExpenseCategories] = useState([])
@@ -23,7 +23,7 @@ function LogDetail({ record }) {
     const [description, setDescription] = useState(lastRecord == null ? '' : lastRecord.description)
     const [amount, setAmount] = useState(lastRecord == null ? 0 : lastRecord.money_amount)
 
-
+    const [isEdited, setIsEdited] = useState(false)
 
     if (record !== lastRecord) {
         setLastRecord(record)
@@ -34,13 +34,38 @@ function LogDetail({ record }) {
         setNote(record.note)
         setDescription(record.description)
         setAmount(record.money_amount)
+
+        setIsEdited(false)
     }
+
 
     useEffect(async () => {
         await fetchCategories()
         await fetchMethod()
         await fetchType()
     }, [])
+
+    const onSaveChange = (e) => {
+        e.preventDefault()
+        const newRecord = {
+            ...record,
+            date_created: selectedDate,
+            expense_type_id: selectedType,
+            method: selectedMethod,
+            money_amount: amount,
+            category_id: selectedCategory,
+            detail: description ? description : "",
+            note: note ? note : "",
+            category_name: expenseCategories.find(category => category.id == selectedCategory).category_name,
+            type_name: expenseTypes.find(type => type.id == selectedType).type_name,
+            method_name: expenseMethods.find(method => method.id == selectedMethod).method_name
+        }
+        onUpdateRecord(newRecord)
+    }
+    const onDeleteRecord = (e) => {
+        e.preventDefault()
+        onRemoveRecord(record)
+    }
 
     const fetchMethod = async () => {
         try {
@@ -95,35 +120,56 @@ function LogDetail({ record }) {
 
     const onChangeExpenseType = (e, id) => {
         if (id == selectedType) { return }
+        if (id != record.expense_type_id) {
+            setIsEdited(true)
+        }
         e.preventDefault()
         setSelectedType(id)
     }
     const onChangeExpenseMethod = (e, id) => {
         if (id == selectedMethod) { return }
+        if (id != record.method) {
+            setIsEdited(true)
+        }
         e.preventDefault()
         setSelectMethod(id)
     }
     const onChangeDate = (date) => {
         if (selectedDate == date) { return }
+        if (date != record.date_created) {
+            setIsEdited(true)
+        }
         setSelectedDate(date)
     }
     const onChangeCategory = (e) => {
         if (e.target.value == selectedCategory) { return }
+        if (e.target.value != record.category_id) {
+            setIsEdited(true)
+        }
         e.preventDefault()
         setSelectedCategory(e.target.value)
     }
     const onChangeAmount = (e) => {
         if (e.target.value == amount) { return }
+        if (e.target.value != record.money_amount) {
+            setIsEdited(true)
+        }
         e.preventDefault()
         setAmount(e.target.value)
     }
     const onChangeNote = (e) => {
         if (note == e.target.value) { return }
+        if (note != record.note) {
+            setIsEdited(true)
+        }
         e.preventDefault()
         setNote(e.target.value)
     }
     const onChangeDescription = (e) => {
         if (description == e.target.value) { return }
+        if (description != record.description) {
+            setIsEdited(true)
+        }
         e.preventDefault()
         setDescription(e.target.value)
     }
@@ -204,8 +250,8 @@ function LogDetail({ record }) {
                                 </form>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-danger">Delete</button>
-                                <button type="button" className="btn btn-primary" data-dismiss="modal" >Save</button>
+                                <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={e => onDeleteRecord(e)}>Delete</button>
+                                {isEdited ? <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={e => onSaveChange(e)}>Save</button> : <Fragment></Fragment>}
                             </div>
                         </div>
                     </div>

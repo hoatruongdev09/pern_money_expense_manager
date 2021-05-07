@@ -19,7 +19,7 @@ function CardLog({ log, onSelectRecord }) {
     </Fragment>
   );
 }
-function DiaryLog({ logs }) {
+function DiaryLog({ logs, onRemoveRecord, onUpdateRecord }) {
 
   const [currentSelectRecord, setCurrentRecord] = useState(null)
 
@@ -58,7 +58,7 @@ function DiaryLog({ logs }) {
           ))}
         </div>
       </div>
-      <LogDetail record={currentSelectRecord} />
+      <LogDetail onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} record={currentSelectRecord} />
     </Fragment>
   );
 }

@@ -31,4 +31,23 @@ const listExpenseType = async () => {
         throw err
     }
 }
-module.exports = { listDetailExpense, listExpenseMethod, listExpenseType }
+
+const deleteRecord = async (id, is_admin, user_id) => {
+    try {
+        if (is_admin) {
+            const deletedCategory = await db.query(
+                "DELETE FROM money_expense WHERE id=$1",
+                [id]
+            );
+            return deletedCategory.rowCount
+        }
+        const deletedCategory = await db.query(
+            "DELETE FROM money_expense WHERE id=$1 AND user_id=$2",
+            [id, user_id]
+        );
+        return deletedCategory.rowCount
+    } catch (err) {
+        throw err
+    }
+}
+module.exports = { deleteRecord, listDetailExpense, listExpenseMethod, listExpenseType }

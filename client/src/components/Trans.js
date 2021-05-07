@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 
-import Log from "./Dashboard/DiaryLog";
+import DiaryLog from "./Dashboard/DiaryLog";
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
@@ -44,6 +44,48 @@ function Dashboard() {
     setLog([log, ...logs])
   }
 
+  const onRemoveRecord = async (record) => {
+    console.log('remove record: ', record)
+    try {
+      const response = await fetch(`${Host}/money_expense/${record.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      const parseRes = await response.json()
+      if (response.status === 200) {
+        setLog(logs.filter(log => log.id != record.id))
+      } else {
+        console.log(parseRes)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const onUpdateRecord = async (record) => {
+    const newRecord = { ...record }
+    newRecord.date_created = Math.floor(new Date(record.date_created) / 1000);
+    console.log('update record: ', newRecord)
+    try {
+      const response = await fetch(`${Host}/money_expense/${newRecord.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newRecord)
+      })
+      const parseRes = await response.json()
+
+      if (response.status === 200) {
+        setLog(logs.map(log => log.id != record.id ? log : record))
+        console.log(parseRes)
+      } else {
+        console.log(parseRes)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <Fragment>
       <div id="page-top" className={`big-body ${toggleSideBar ? "sidebar-toggled" : ""}`} >
@@ -73,7 +115,7 @@ function Dashboard() {
                   </div>
                 </div>
                 <hr />
-                <Log logs={logs} />
+                <DiaryLog onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} logs={logs} />
               </div>
             </div>
           </div>
