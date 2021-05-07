@@ -65,7 +65,6 @@ function CreateLog({ onCreateLog }) {
             console.error(error.message)
         }
     }
-
     const fetchCategories = async () => {
         try {
             const response = await fetch(`${Host}/category`, {
@@ -165,7 +164,7 @@ function CreateLog({ onCreateLog }) {
                 <div className="modal-dialog modal-dialog-centered" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLongTitle">{selectedType === 0 ? "Expense" : expenseTypes.find(type => type.id === selectedType).type_name}</h5>
+                            <h5 className="modal-title" id="exampleModalLongTitle">{selectedType == 0 ? "Expense" : expenseTypes.find(type => type.id == selectedType).type_name}</h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -185,7 +184,7 @@ function CreateLog({ onCreateLog }) {
                                 <div className="form-group row">
                                     <label htmlFor="staticEmail" className="col-sm-3 col-form-label">Date</label>
                                     <div className="col-sm-9">
-                                        <DatePicker className="form-control" selected={selectedDate} onChange={date => onChangeDate(date)} />
+                                        <DatePicker className="form-control" dateFormat="MMMM d, yyyy h:mm aa" showTimeSelect selected={selectedDate} onChange={date => onChangeDate(date)} />
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -204,7 +203,7 @@ function CreateLog({ onCreateLog }) {
                                     <label className="col-sm-3 col-form-label">Category</label>
                                     <div className="col-sm-9">
                                         <select className="form-control" id="exampleFormControlSelect1" onChange={e => onChangeCategory(e)}>
-                                            <option defaultValue={setSelectedCategory == 0}>Choose...</option>
+                                            <option defaultValue={selectedCategory == 0}>Choose...</option>
                                             {
                                                 expenseCategories.map(category => (
                                                     <option defaultValue={category.id == selectedCategory} key={`category-option-${category.id}`} value={category.id}>{category.category_name}</option>
