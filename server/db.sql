@@ -1,5 +1,7 @@
 CREATE DATABASE money_manager;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE users(
     user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_name VARCHAR(255) NOT NULL,
@@ -11,7 +13,7 @@ CREATE TABLE users(
 )
 CREATE TABLE category (
     id SERIAL PRIMARY KEY NOT NULL,
-    category_name VARCHAR(255) NOT NULL
+    category_name VARCHAR(255) NOT NULL,
     user_category BOOLEAN DEFAULT(FALSE),
     user_id uuid
 )
