@@ -1,6 +1,7 @@
 import { Fragment, useState, useEffect, forwardRef } from "react";
 import DatePicker from 'react-datepicker'
 import DailyLog from "./Dashboard/DailyLog";
+import MonthlyLog from "./Dashboard/MonthlyLog"
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
@@ -14,7 +15,7 @@ import Host from "../AppURL";
 
 function Dashboard() {
   const [toggleSideBar, setToggleSideBar] = useState(false);
-  const [windowType, setWindowType] = useState(1)
+  const [windowType, setWindowType] = useState(2)
   const [logs, setLog] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth()))
@@ -90,19 +91,30 @@ function Dashboard() {
       console.log(error)
     }
   }
-  const onChangeMonth = async (e, direct) => {
+  const onChangeDate = async (e, direct) => {
     e.preventDefault()
-    let date = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + direct)
+    let date = new Date()
+    switch (windowType) {
+      case 1:
+        date = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + direct)
+        break
+      case 2:
+        const year = selectedDate.getFullYear() + direct
+        date = new Date(year, 1)
+        const endYear = new Date(year, 12, 31)
+        await fetchLog(Math.floor(date / 1000), Math.floor(endYear / 1000));
+        break
+      default:
+        date = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + direct)
+        await fetchLog(Math.floor(date / 1000), Math.floor(new Date() / 1000));
+        break
+    }
     setSelectedDate(date)
-    await fetchLog(Math.floor(date / 1000), Math.floor(new Date() / 1000));
   }
-  const ModifiedDatePickerInput = forwardRef(
-    ({ value, onClick }, ref) => (
-      <button className="btn btn-dark" onClick={onClick} ref={ref}>{value}</button>
-    ),
-  );
-  const onChangeShowType = (type) => {
-    // setWindowType(type)
+
+  const onChangeShowType = (e, type) => {
+    e.preventDefault()
+    setWindowType(type)
   }
   return (
     <Fragment>
@@ -118,9 +130,11 @@ function Dashboard() {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-12">
-                    <span onClick={onChangeShowType(0)} className={`${windowType == 0 ? "h4 border-bottom-primary" : "h5"} text-gray-800`}>Daily</span>
-                    <span onClick={onChangeShowType(1)} className={`${windowType == 1 ? "h4 border-bottom-primary" : "h5"} text-gray-800 mx-3`}>Weekly</span>
-                    <span onClick={onChangeShowType(2)} className={`${windowType == 2 ? "h4 border-bottom-primary" : "h5"} text-gray-800`}>Monthly</span>
+                    <div className="btn-group" role="group" aria-aria-label="group-change-window">
+                      <button className="btn" onClick={(e) => onChangeShowType(e, 0)}><span className={`${windowType == 0 ? "h4 border-bottom-primary" : "h5"} text-gray-800`}>Daily</span></button>
+                      <button className="btn" onClick={(e) => onChangeShowType(e, 1)}><span className={`${windowType == 1 ? "h4 border-bottom-primary" : "h5"} text-gray-800 mx-3`}>Weekly</span></button>
+                      <button className="btn" onClick={(e) => onChangeShowType(e, 2)}><span className={`${windowType == 2 ? "h4 border-bottom-primary" : "h5"} text-gray-800`}>Monthly</span></button>
+                    </div>
                   </div>
                 </div>
                 <hr />
@@ -128,19 +142,13 @@ function Dashboard() {
                   <div className="col-8">
                     <div className="float-left">
                       <div className="float-left">
-                        <button onClick={e => onChangeMonth(e, -1)} type="button float-left" className="btn btn-light"><i className="fas fa-angle-left"></i></button>
+                        <button onClick={e => onChangeDate(e, -1)} type="button float-left" className="btn btn-light"><i className="fas fa-angle-left"></i></button>
                       </div>
                       <div className="float-left px-2">
-                        <DatePicker
-                          customInput={<ModifiedDatePickerInput />}
-                          selected={selectedDate}
-                          onChange={date => setSelectedDate(date)}
-                          dateFormat="yyyy MMM"
-                          showMonthYearPicker
-                        />
+                        <SelectDatePicker window={windowType} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                       </div>
                       <div className="float-left">
-                        <button onClick={e => onChangeMonth(e, 1)} type="button" className="btn btn-light float-left"><i className="fas fa-angle-right"></i></button>
+                        <button onClick={e => onChangeDate(e, 1)} type="button" className="btn btn-light float-left"><i className="fas fa-angle-right"></i></button>
                       </div>
                     </div>
                   </div>
@@ -153,8 +161,7 @@ function Dashboard() {
                     </div>
                   </div>
                 </div>
-
-                <DailyLog onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} logs={logs} />
+                <SelectWindow window={windowType} onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} logs={logs} />
               </div>
             </div>
           </div>
@@ -162,6 +169,41 @@ function Dashboard() {
       </div>
     </Fragment>
   );
+}
+
+function SelectWindow({ window, onRemoveRecord, onUpdateRecord, logs }) {
+  switch (window) {
+    case 1: return <Fragment></Fragment>
+    case 2: return (<MonthlyLog logs={logs} />)
+    default: return (<DailyLog onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} logs={logs} />)
+  }
+}
+function SelectDatePicker({ window, selectedDate, setSelectedDate }) {
+  const ModifiedDatePickerInput = forwardRef(
+    ({ value, onClick }, ref) => (
+      <button className="btn btn-dark" onClick={onClick} ref={ref}>{value}</button>
+    ),
+  );
+  switch (window) {
+    case 1: return (<Fragment></Fragment>)
+    case 2: return (
+      <DatePicker
+        customInput={<ModifiedDatePickerInput />}
+        selected={selectedDate}
+        onChange={date => setSelectedDate(date)}
+        dateFormat="yyyy"
+        showMonthYearPicker
+      />
+    )
+    default: return (
+      <DatePicker
+        customInput={<ModifiedDatePickerInput />}
+        selected={selectedDate}
+        onChange={date => setSelectedDate(date)}
+        dateFormat="yyyy MMM"
+        showMonthYearPicker
+      />)
+  }
 }
 
 export default Dashboard;

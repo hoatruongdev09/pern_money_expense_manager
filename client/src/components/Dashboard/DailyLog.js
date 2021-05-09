@@ -19,7 +19,7 @@ function CardLog({ log, onSelectRecord }) {
     </Fragment>
   );
 }
-function DiaryLog({ logs, onRemoveRecord, onUpdateRecord }) {
+function Daily({ logs, onRemoveRecord, onUpdateRecord }) {
 
   const [currentSelectRecord, setCurrentRecord] = useState(null)
 
@@ -63,4 +63,4 @@ function DiaryLog({ logs, onRemoveRecord, onUpdateRecord }) {
     </Fragment>
   );
 }
-export default DiaryLog;
+export default Daily;
