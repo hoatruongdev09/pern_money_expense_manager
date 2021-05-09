@@ -8,6 +8,7 @@ const formatMonthDay = (value) => {
     }
 }
 
+
 function LogDate({ log }) {
     const dateName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const date = new Date(log.records[0].date_created);
@@ -37,9 +38,9 @@ function LogDate({ log }) {
                     </div>
                     <div className="float-left pl-2 pb-2">
                         <p style={{ marginBottom: 0 }}>
-                            {formatMonthDay(date.getMonth())}.{date.getFullYear()}
+                            {formatMonthDay(date.getMonth() + 1)}.{date.getFullYear()}
                         </p>
-                        <span className="badge badge-light">{dateName[date.getDay()]}</span>
+                        <span className={`badge badge-${date.getDay() == 0 ? "danger" : "light"}`}>{dateName[date.getDay()]}</span>
                     </div>
 
                 </div>
@@ -56,7 +57,7 @@ function LogDate({ log }) {
                     </div>
                 </div>
                 <div className="col-2 text-center">
-                    <button className="btn px-0 mx-0"><i className="fa fa-info-circle text-info" aria-hidden="true"></i></button>
+                    <button className="btn px-0 mx-0"><i className="fa fa-sticky-note text-white" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>

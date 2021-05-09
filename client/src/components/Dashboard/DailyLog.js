@@ -27,7 +27,7 @@ function DiaryLog({ logs, onRemoveRecord, onUpdateRecord }) {
   const groupByDay = (logs) => {
     const map = new Map();
     logs.forEach((log) => {
-      const logDay = new Date(log.date_created).getDay();
+      const logDay = new Date(log.date_created).getDate();
       const collection = map.get(logDay);
       if (!collection) {
         map.set(logDay, [log]);
@@ -39,6 +39,7 @@ function DiaryLog({ logs, onRemoveRecord, onUpdateRecord }) {
     for (let [key, value] of map) {
       records.push({ day: key, records: value });
     }
+    records.sort((a, b) => { return b.day - a.day })
     return records;
   };
 

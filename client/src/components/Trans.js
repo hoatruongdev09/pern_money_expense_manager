@@ -1,27 +1,32 @@
-import { Fragment, useState, useEffect } from "react";
-
-import DiaryLog from "./Dashboard/DiaryLog";
+import { Fragment, useState, useEffect, forwardRef } from "react";
+import DatePicker from 'react-datepicker'
+import DailyLog from "./Dashboard/DailyLog";
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
 import CreateNote from './Dashboard/CreateNote'
 import CreateLog from './Dashboard/CreateLog'
 
+import 'react-datepicker/dist/react-datepicker.css'
+
 
 import Host from "../AppURL";
 
 function Dashboard() {
   const [toggleSideBar, setToggleSideBar] = useState(false);
+  const [windowType, setWindowType] = useState(1)
   const [logs, setLog] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth()))
 
   const activeToggleSideBar = (e) => {
     e.preventDefault();
     setToggleSideBar(!toggleSideBar);
   };
 
-  const fetchLog = async () => {
+  const fetchLog = async (startDate, endDate) => {
     try {
-      const response = await fetch(`${Host}/money_expense`, {
+      const response = await fetch(`${Host}/money_expense?startDate=${startDate}&endDate=${endDate}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -37,7 +42,7 @@ function Dashboard() {
   };
 
   useEffect(async () => {
-    await fetchLog();
+    await fetchLog(Math.floor(selectedDate / 1000), Math.floor(new Date() / 1000));
   }, []);
 
   const onCreateLog = (log) => {
@@ -62,8 +67,7 @@ function Dashboard() {
     }
   }
   const onUpdateRecord = async (record) => {
-    const newRecord = { ...record }
-    newRecord.date_created = Math.floor(new Date(record.date_created) / 1000);
+    const newRecord = { ...record, date_created: Math.floor(new Date(record.date_created) / 1000) }
     console.log('update record: ', newRecord)
     try {
       const response = await fetch(`${Host}/money_expense/${newRecord.id}`, {
@@ -86,6 +90,20 @@ function Dashboard() {
       console.log(error)
     }
   }
+  const onChangeMonth = async (e, direct) => {
+    e.preventDefault()
+    let date = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + direct)
+    setSelectedDate(date)
+    await fetchLog(Math.floor(date / 1000), Math.floor(new Date() / 1000));
+  }
+  const ModifiedDatePickerInput = forwardRef(
+    ({ value, onClick }, ref) => (
+      <button className="btn btn-dark" onClick={onClick} ref={ref}>{value}</button>
+    ),
+  );
+  const onChangeShowType = (type) => {
+    // setWindowType(type)
+  }
   return (
     <Fragment>
       <div id="page-top" className={`big-body ${toggleSideBar ? "sidebar-toggled" : ""}`} >
@@ -100,11 +118,32 @@ function Dashboard() {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-12">
-                    <h1 className="h3 text-gray-800">Diary</h1>
+                    <span onClick={onChangeShowType(0)} className={`${windowType == 0 ? "h4 border-bottom-primary" : "h5"} text-gray-800`}>Daily</span>
+                    <span onClick={onChangeShowType(1)} className={`${windowType == 1 ? "h4 border-bottom-primary" : "h5"} text-gray-800 mx-3`}>Weekly</span>
+                    <span onClick={onChangeShowType(2)} className={`${windowType == 2 ? "h4 border-bottom-primary" : "h5"} text-gray-800`}>Monthly</span>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-8"></div>
+                <hr />
+                <div className="row pb-2">
+                  <div className="col-8">
+                    <div className="float-left">
+                      <div className="float-left">
+                        <button onClick={e => onChangeMonth(e, -1)} type="button float-left" className="btn btn-light"><i className="fas fa-angle-left"></i></button>
+                      </div>
+                      <div className="float-left px-2">
+                        <DatePicker
+                          customInput={<ModifiedDatePickerInput />}
+                          selected={selectedDate}
+                          onChange={date => setSelectedDate(date)}
+                          dateFormat="yyyy MMM"
+                          showMonthYearPicker
+                        />
+                      </div>
+                      <div className="float-left">
+                        <button onClick={e => onChangeMonth(e, 1)} type="button" className="btn btn-light float-left"><i className="fas fa-angle-right"></i></button>
+                      </div>
+                    </div>
+                  </div>
                   <div className="col-4">
                     <div className="float-right">
                       <CreateLog onCreateLog={log => onCreateLog(log)} />
@@ -114,8 +153,8 @@ function Dashboard() {
                     </div>
                   </div>
                 </div>
-                <hr />
-                <DiaryLog onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} logs={logs} />
+
+                <DailyLog onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} logs={logs} />
               </div>
             </div>
           </div>

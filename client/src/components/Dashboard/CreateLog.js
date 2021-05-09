@@ -125,7 +125,8 @@ function CreateLog({ onCreateLog }) {
             money_amount: amount,
             note: note,
             detail: description,
-            method: selectedMethod
+            method: selectedMethod,
+            date_created: Math.floor(selectedDate / 1000)
         }
         console.log(JSON.stringify(body))
         try {
@@ -139,12 +140,20 @@ function CreateLog({ onCreateLog }) {
             })
             const parsedRes = await response.json()
             if (response.status === 200) {
+                const typeName = expenseTypes.find(type => type.id == selectedType).type_name
+                const categoryName = expenseCategories.find(category => category.id == selectedCategory).category_name
+                const methodName = expenseMethods.find(method => method.id == selectedMethod).method_name
                 onCreateLog({
                     ...parsedRes,
-                    type_name: expenseTypes.find(type => type.id == selectedType).type_name,
-                    category_name: expenseCategories.find(category => category.id == selectedCategory).category_name,
-                    method_name: expenseMethods.find(method => method.id == selectedMethod).method_name
+                    type_name: typeName,
+                    category_name: categoryName,
+                    method_name: methodName
                 })
+                setSelectedDate(new Date())
+                setSelectedType(1)
+                setSelectedCategory(1)
+                setSelectMethod(1)
+                setAmount(0)
                 setNote('')
                 setDescription('')
                 setSelectedCategory(0)
