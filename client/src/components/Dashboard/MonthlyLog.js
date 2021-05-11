@@ -15,17 +15,31 @@ function RecordLog({ record, index }) {
     })
 
     return (
-        <div className="row">
-            <div className="col-2">
-                <div className="w-100 h-100 text-center">
-                    <button className="btn btn-outline-primary">{months[record.month]}</button>
+        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary text-center">{months[record.month]}</h6>
                 </div>
-            </div>
-            <div className="col-5">
-                <p className="pt-2 text-right text-info" >{formatter.format(incomeAmount)}</p>
-            </div>
-            <div className="col-5">
-                <p className="pt-2 text-right text-danger" >{formatter.format(expenseAmount)}</p>
+                <div class="card-body">
+                    <div class="alert alert-primary" role="alert">
+                        <div className="row">
+                            <div className="col-5 text-left"><small>Income:</small></div>
+                            <div className="col-7 text-right"><small>{formatter.format(incomeAmount)}</small></div>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger" role="alert">
+                        <div className="row">
+                            <div className="col-5 text-left"><small>Expense:</small></div>
+                            <div className="col-7 text-right"><small>{formatter.format(expenseAmount)}</small></div>
+                        </div>
+                    </div>
+                    <div class="alert alert-light" role="alert">
+                        <div className="row">
+                            <div className="col-5 text-left"><small>Balance:</small></div>
+                            <div className="col-7 text-right"><small>{formatter.format(incomeAmount - expenseAmount)}</small></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
@@ -57,17 +71,14 @@ function MonthlyLog({ logs }) {
         <Fragment>
             <div className="row">
                 <div className="col-lg-12">
-                    <div className="row pt-2">
-                        <div className="col-2"><div className="w-100 h-100 text-center">Month</div></div>
-                        <div className="col-5"><div className="pt-1 text-right text-info">Income</div></div>
-                        <div className="col-5"><div className="pt-1 text-right text-danger">Expense</div></div>
-                    </div>
                     <hr />
-                    {
-                        logMap.map((lg, index) => (
-                            <RecordLog key={`month-log-${index}`} record={lg} index={index} />
-                        ))
-                    }
+                    <div className="row">
+                        {
+                            logMap.map((lg, index) => (
+                                <RecordLog key={`month-log-${index}`} record={lg} index={index} />
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
         </Fragment >

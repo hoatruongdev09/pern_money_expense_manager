@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect, forwardRef } from "react";
 import DatePicker from 'react-datepicker'
 import DailyLog from "./Dashboard/DailyLog";
 import MonthlyLog from "./Dashboard/MonthlyLog"
+import WeeklyLog from './Dashboard/WeeklyLog'
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
@@ -94,9 +95,12 @@ function Dashboard() {
   const onChangeDate = async (e, direct) => {
     e.preventDefault()
     let date = new Date()
+    let endMonth = new Date()
     switch (windowType) {
       case 1:
         date = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + direct)
+        endMonth = new Date(selectedDate.getFullYear(), date.getMonth() + 1, 0)
+        await fetchLog(Math.floor(date / 1000), Math.floor(endMonth / 1000));
         break
       case 2:
         const year = selectedDate.getFullYear() + direct
@@ -106,7 +110,8 @@ function Dashboard() {
         break
       default:
         date = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + direct)
-        await fetchLog(Math.floor(date / 1000), Math.floor(new Date() / 1000));
+        endMonth = new Date(selectedDate.getFullYear(), date.getMonth() + 1, 0)
+        await fetchLog(Math.floor(date / 1000), Math.floor(endMonth / 1000));
         break
     }
     setSelectedDate(date)
@@ -130,10 +135,10 @@ function Dashboard() {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-12">
-                    <div className="btn-group" role="group" aria-aria-label="group-change-window">
-                      <button className="btn" onClick={(e) => onChangeShowType(e, 0)}><span className={`${windowType == 0 ? "h4 border-bottom-primary" : "h5"} text-gray-800`}>Daily</span></button>
-                      <button className="btn" onClick={(e) => onChangeShowType(e, 1)}><span className={`${windowType == 1 ? "h4 border-bottom-primary" : "h5"} text-gray-800 mx-3`}>Weekly</span></button>
-                      <button className="btn" onClick={(e) => onChangeShowType(e, 2)}><span className={`${windowType == 2 ? "h4 border-bottom-primary" : "h5"} text-gray-800`}>Monthly</span></button>
+                    <div className="btn-group" role="group" aria-label="group-change-window">
+                      <button className={`${windowType == 0 ? "border-bottom-primary" : ""} btn`} onClick={(e) => onChangeShowType(e, 0)}><span className={`text-gray-800`}>Daily</span></button>
+                      <button className={`${windowType == 1 ? "border-bottom-primary" : ""} btn`} onClick={(e) => onChangeShowType(e, 1)}><span className={`text-gray-800 mx-3`}>Weekly</span></button>
+                      <button className={`${windowType == 2 ? "border-bottom-primary" : ""} btn`} onClick={(e) => onChangeShowType(e, 2)}><span className={`text-gray-800`}>Monthly</span></button>
                     </div>
                   </div>
                 </div>
@@ -173,7 +178,7 @@ function Dashboard() {
 
 function SelectWindow({ window, onRemoveRecord, onUpdateRecord, logs }) {
   switch (window) {
-    case 1: return <Fragment></Fragment>
+    case 1: return (<WeeklyLog logs={logs} />)
     case 2: return (<MonthlyLog logs={logs} />)
     default: return (<DailyLog onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} logs={logs} />)
   }
@@ -185,7 +190,15 @@ function SelectDatePicker({ window, selectedDate, setSelectedDate }) {
     ),
   );
   switch (window) {
-    case 1: return (<Fragment></Fragment>)
+    case 1: return (
+      <DatePicker
+        customInput={<ModifiedDatePickerInput />}
+        selected={selectedDate}
+        onChange={date => setSelectedDate(date)}
+        dateFormat="yyyy MMM"
+        showMonthYearPicker
+      />
+    )
     case 2: return (
       <DatePicker
         customInput={<ModifiedDatePickerInput />}

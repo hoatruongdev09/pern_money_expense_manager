@@ -54,6 +54,7 @@ function Daily({ logs, onRemoveRecord, onUpdateRecord }) {
 
       <div className="row">
         <div className="col-lg-12">
+          <hr />
           {logMap.map((lg, index) => (
             <CardLog onSelectRecord={record => onSelectRecord(record)} key={`card-log-${index}`} log={lg} />
           ))}
