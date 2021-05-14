@@ -22,6 +22,7 @@ function CreateLog({ onCreateLog }) {
     const [description, setDescription] = useState('')
 
     const [amount, setAmount] = useState(0)
+    const [selectedCategories, setSelectedCategories] = useState([])
 
     useEffect(async () => {
         await fetchCategories()
@@ -87,6 +88,8 @@ function CreateLog({ onCreateLog }) {
     const onChangeExpenseType = (e, id) => {
         if (id == selectedType) { return }
         e.preventDefault()
+        const categories = expenseCategories.filter((cat) => cat.expense_type_id == id)
+        setSelectedCategories(categories)
         setSelectedType(id)
     }
     const onChangeExpenseMethod = (e, id) => {
@@ -214,7 +217,7 @@ function CreateLog({ onCreateLog }) {
                                         <select className="form-control" id="exampleFormControlSelect1" onChange={e => onChangeCategory(e)}>
                                             <option defaultValue={selectedCategory == 0}>Choose...</option>
                                             {
-                                                expenseCategories.map(category => (
+                                                expenseCategories.filter(cat => cat.expense_type_id == selectedType).map(category => (
                                                     <option defaultValue={category.id == selectedCategory} key={`category-option-${category.id}`} value={category.id}>{category.category_name}</option>
                                                 ))
                                             }

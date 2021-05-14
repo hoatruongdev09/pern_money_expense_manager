@@ -17,9 +17,9 @@ function LogRecord({ index, record, onSelectRecord }) {
                     <div className="col-4">
                         <p
                             style={{ marginBottom: 0, height: "100%" }}
-                            className="text-center pt-2"
+                            className="text-left pt-2"
                         >
-                            <span className="text-info">{record.category_name}</span>
+                            <span className="text-info">{record.category_name.length >= 15 ? `${record.category_name.substring(0, 10)}...` : record.category_name}</span>
                         </p>
                     </div>
                     <div className="col-6">

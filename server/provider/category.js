@@ -42,18 +42,18 @@ const getCategory = async (isAuthorized, userID, id) => {
         throw err;
     }
 };
-const createCategory = async (isAdmin, category_name, user_id) => {
+const createCategory = async (isAdmin, category_name, expense_type_id, user_id) => {
     try {
         if (isAdmin) {
             const category = await db.query(
-                "INSERT INTO category(category_name) VALUES($1) RETURNING*;",
-                [category_name]
+                "INSERT INTO category(category_name,expense_type_id) VALUES($1,$2) RETURNING*;",
+                [category_name, expense_type_id]
             );
             return category.rows[0];
         }
         const category = await db.query(
-            "INSERT INTO category(category_name,user_category,user_id) VALUES($1,TRUE,$2) RETURNING*;",
-            [category_name, user_id]
+            "INSERT INTO category(category_name,expense_type_id,user_category,user_id) VALUES($1,$2,TRUE,$3) RETURNING*;",
+            [category_name, expense_type_id, user_id]
         );
         return category.rows[0];
     } catch (err) {
@@ -79,18 +79,18 @@ const deleteCategory = async (is_admin, user_id, id) => {
     }
 };
 
-const updateCategory = async (is_admin, user_id, id, category_name, user_category) => {
+const updateCategory = async (is_admin, user_id, id, category_name, expense_type_id, user_category) => {
     try {
         if (is_admin) {
             const updatedCategory = await db.query(
-                "UPDATE category SET category_name=$1,user_category=$2,user_id=$3 WHERE id=$4",
-                [category_name, user_category, user_id, id]
+                "UPDATE category SET category_name=$1,expense_type_id=$2,user_category=$3,user_id=$4 WHERE id=$5",
+                [category_name, expense_type_id, user_category, user_id, id]
             );
             return updatedCategory.rowCount;
         }
         const updatedCategory = await db.query(
-            "UPDATE category SET category_name=$1, WHERE id=$4 AND user_id=$2",
-            [id, user_id]
+            "UPDATE category SET category_name=$1,expense_type_id=$2, WHERE id=$3 AND user_id=$4",
+            [category_name, expense_type_id, id, user_id]
         );
         return updatedCategory.rowCount;
     } catch (err) {

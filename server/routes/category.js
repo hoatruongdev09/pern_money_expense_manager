@@ -23,8 +23,8 @@ Router.get('/:id', lowLevelAuthorization, async (req, res) => {
 
 Router.post('/', authorization, async (req, res) => {
     try {
-        const { category_name } = req.body
-        return res.json(await categoryProvider.createCategory(req.user.is_admin, category_name, req.user.user_id))
+        const { category_name, expense_type_id } = req.body
+        return res.json(await categoryProvider.createCategory(req.user.is_admin, category_name, expense_type_id, req.user.user_id))
     } catch (err) {
         error.internalError(res, err.message)
     }

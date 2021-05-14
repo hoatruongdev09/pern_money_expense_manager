@@ -5,6 +5,7 @@ import MonthlyLog from "./Dashboard/MonthlyLog"
 import WeeklyLog from './Dashboard/WeeklyLog'
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
+import OverViewLogs from "./Dashboard/OverViewLog"
 
 import CreateNote from './Dashboard/CreateNote'
 import CreateLog from './Dashboard/CreateLog'
@@ -166,6 +167,9 @@ function Dashboard() {
                     </div>
                   </div>
                 </div>
+                <hr />
+                <OverViewLogs logs={logs} />
+
                 <SelectWindow window={windowType} onRemoveRecord={record => onRemoveRecord(record)} onUpdateRecord={record => onUpdateRecord(record)} logs={logs} />
               </div>
             </div>
