@@ -16,7 +16,7 @@ import Host from "../AppURL";
 
 function Dashboard() {
   const [toggleSideBar, setToggleSideBar] = useState(false);
-  const [windowType, setWindowType] = useState(2)
+  const [windowType, setWindowType] = useState(0)
   const [logs, setLog] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth()))
@@ -195,7 +195,7 @@ function SelectDatePicker({ window, selectedDate, setSelectedDate }) {
         customInput={<ModifiedDatePickerInput />}
         selected={selectedDate}
         onChange={date => setSelectedDate(date)}
-        dateFormat="yyyy MMM"
+        dateFormat="MMM yyyy"
         showMonthYearPicker
       />
     )
@@ -213,7 +213,7 @@ function SelectDatePicker({ window, selectedDate, setSelectedDate }) {
         customInput={<ModifiedDatePickerInput />}
         selected={selectedDate}
         onChange={date => setSelectedDate(date)}
-        dateFormat="yyyy MMM"
+        dateFormat="MMM yyyy"
         showMonthYearPicker
       />)
   }
