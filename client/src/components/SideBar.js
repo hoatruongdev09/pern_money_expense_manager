@@ -5,9 +5,8 @@ function SideBar({ showSideBar, toggleSidebar }) {
   return (
     <Fragment>
       <ul
-        className={`navbar-nav bg-gradient-primary sidebar sidebar-dark accordion ${
-          showSideBar ? "toggled" : ""
-        }`}
+        className={`navbar-nav bg-gradient-primary sidebar sidebar-dark accordion ${showSideBar ? "toggled" : ""
+          }`}
         id="accordionSidebar"
       >
         <Link
@@ -152,11 +151,16 @@ function SideBar({ showSideBar, toggleSidebar }) {
             <span>Charts</span>
           </a>
         </li>
-
         <li className="nav-item">
-          <Link className="nav-link" to="/trans">
+          <Link className="nav-link" to="/dashboard/categories">
             <i className="fas fa-fw fa-table"></i>
-            <span>Trans</span>
+            <span>Categories</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/dashboard/transaction">
+            <i className="fas fa-fw fa-table"></i>
+            <span>Transactions</span>
           </Link>
         </li>
 
@@ -173,7 +177,7 @@ function SideBar({ showSideBar, toggleSidebar }) {
         <div className="sidebar-card d-none d-lg-flex">
           <img
             className="sidebar-card-illustration mb-2"
-            src="img/undraw_rocket.svg"
+            src="/img/undraw_rocket.svg"
             alt="..."
           />
           <p className="text-center mb-2">

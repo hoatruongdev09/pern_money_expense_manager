@@ -15,7 +15,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import Host from "../AppURL";
 
-function Dashboard() {
+function TransactionPage() {
   const [toggleSideBar, setToggleSideBar] = useState(false);
   const [windowType, setWindowType] = useState(0)
   const [logs, setLog] = useState([]);
@@ -223,4 +223,4 @@ function SelectDatePicker({ window, selectedDate, setSelectedDate }) {
   }
 }
 
-export default Dashboard;
+export default TransactionPage;

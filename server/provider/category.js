@@ -6,17 +6,32 @@ const listCategories = async (isAuthorized, isAdmin, userID) => {
             const categories = await db.query(
                 "SELECT * FROM category WHERE user_category=FALSE"
             );
-            return categories.rows;
+            return categories.rows.map(cat => {
+                return {
+                    ...cat,
+                    canDelete: isAdmin || cat.user_category
+                }
+            });
         }
         if (isAdmin) {
             const categories = await db.query("SELECT * FROM category");
-            return categories.rows;
+            return categories.rows.map(cat => {
+                return {
+                    ...cat,
+                    canDelete: isAdmin || cat.user_category
+                }
+            });
         }
         const categories = await db.query(
             "SELECT * FROM category WHERE user_category=FALSE OR (user_category=TRUE AND user_id=$1)",
             [userID]
         );
-        return categories.rows;
+        return categories.rows.map(cat => {
+            return {
+                ...cat,
+                canDelete: isAdmin || cat.user_category
+            }
+        });
     } catch (err) {
         throw err;
     }

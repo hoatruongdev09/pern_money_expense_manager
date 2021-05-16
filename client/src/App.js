@@ -10,6 +10,7 @@ import {
 
 import Host from "./AppURL";
 
+
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -17,6 +18,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import TransPage from "./components/Trans";
+import CategoryManager from "./components/CategoryManager"
 import Home from "./components/Home";
 
 function App() {
@@ -105,6 +107,7 @@ function App() {
               }
             />
             <Route
+              exact
               path="/dashboard"
               render={(props) =>
                 isAuthenticate ? (
@@ -115,13 +118,21 @@ function App() {
               }
             />
             <Route
-              path="/trans"
+              exact
+              path="/dashboard/transaction"
               render={(props) =>
                 isAuthenticate ? (
                   <TransPage {...props} setAuth={setAuth} />
                 ) : (
                   <Redirect to="/login" />
                 )
+              }
+            />
+            <Route
+              exact
+              path="/dashboard/categories"
+              render={
+                (props) => isAuthenticate ? (<CategoryManager {...props} setAuth={setAuth} />) : (<Redirect to="/login" />)
               }
             />
           </Switch>
