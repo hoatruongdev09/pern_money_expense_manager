@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
-function SideBar({ showSideBar, toggleSidebar }) {
+function SideBar({ showSideBar, toggleSidebar, selectedTab }) {
   return (
     <Fragment>
       <ul
@@ -14,21 +14,22 @@ function SideBar({ showSideBar, toggleSidebar }) {
           to="/dashboard"
         >
           <div className="sidebar-brand-icon rotate-n-15">
-            <i className="fas fa-laugh-wink"></i>
+            <i className="fas fa-credit-card"></i>
           </div>
           <div className="sidebar-brand-text mx-3">
-            SB Admin <sup>2</sup>
+            Money Manager
           </div>
         </Link>
 
         <hr className="sidebar-divider my-0" />
 
-        <li className="nav-item active">
+        <li className={`nav-item ${selectedTab == 0 ? "active" : ""}`}>
           <Link className="nav-link" to="/dashboard">
             <i className="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
           </Link>
         </li>
+        {/*
 
         <hr className="sidebar-divider" />
 
@@ -151,20 +152,21 @@ function SideBar({ showSideBar, toggleSidebar }) {
             <span>Charts</span>
           </a>
         </li>
-        <li className="nav-item">
+         */}
+        <li className={`nav-item ${selectedTab == 1 ? "active" : ""}`}>
           <Link className="nav-link" to="/dashboard/categories">
-            <i className="fas fa-fw fa-table"></i>
+            <i className="fas fa-fw fa-bars"></i>
             <span>Categories</span>
           </Link>
         </li>
-        <li className="nav-item">
+        <li className={`nav-item ${selectedTab == 2 ? "active" : ""}`}>
           <Link className="nav-link" to="/dashboard/transaction">
-            <i className="fas fa-fw fa-table"></i>
+            <i className="fas fa-fw fa-book"></i>
             <span>Transactions</span>
           </Link>
         </li>
 
-        <hr className="sidebar-divider d-none d-md-block" />
+        {/* <hr className="sidebar-divider d-none d-md-block" />
 
         <div className="text-center d-none d-md-inline">
           <button
@@ -191,6 +193,7 @@ function SideBar({ showSideBar, toggleSidebar }) {
             Upgrade to Pro!
           </a>
         </div>
+      */}
       </ul>
     </Fragment>
   );

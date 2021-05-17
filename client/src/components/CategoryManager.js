@@ -196,6 +196,7 @@ function CategoryManagerPage({ setAuth }) {
                     <SideBar
                         showSideBar={toggleSideBar}
                         toggleSidebar={activeToggleSideBar}
+                        selectedTab={1}
                     />
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
@@ -213,10 +214,10 @@ function CategoryManagerPage({ setAuth }) {
                                                     <h6 className="m-0 pt-2 text-secondary"><small>Categories:</small></h6>
                                                 </div>
                                                 <div className="float-right">
-                                                    <div className="btn-group btn-group-sm mb-1" role="group" aria-label="Basic example">
-                                                        <button type="button" onClick={(e) => onSelectType(e, 1)} className={`btn btn-${selectedType == 1 ? "primary" : "secondary"}`}>Income</button>
-                                                        <button type="button" onClick={(e) => onSelectType(e, 2)} className={`btn btn-${selectedType == 2 ? "primary" : "secondary"}`}>Expense</button>
-                                                        <button type="button" onClick={(e) => onSelectType(e, 3)} className={`btn btn-${selectedType == 3 ? "primary" : "secondary"}`}>Transfer</button>
+                                                    <div className="btn-group btn-group-sm mb-1 pt-1" role="group" aria-label="Basic example">
+                                                        <button type="button" onClick={(e) => onSelectType(e, 1)} className={`pt-0 btn btn-${selectedType == 1 ? "primary" : "secondary"}`}><small>Income</small></button>
+                                                        <button type="button" onClick={(e) => onSelectType(e, 2)} className={`pt-0 btn btn-${selectedType == 2 ? "primary" : "secondary"}`}><small>Expense</small></button>
+                                                        <button type="button" onClick={(e) => onSelectType(e, 3)} className={`pt-0 btn btn-${selectedType == 3 ? "primary" : "secondary"}`}><small>Transfer</small></button>
                                                     </div>
                                                 </div>
                                             </div>

@@ -129,6 +129,7 @@ function TransactionPage() {
           <SideBar
             showSideBar={toggleSideBar}
             toggleSidebar={activeToggleSideBar}
+            selectedTab={2}
           />
           <div id="content-wrapper" className="d-flex flex-column">
             <div id="content">

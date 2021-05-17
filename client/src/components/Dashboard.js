@@ -23,6 +23,7 @@ function Dashboard() {
           <SideBar
             showSideBar={toggleSideBar}
             toggleSidebar={activeToggleSideBar}
+            selectedTab={0}
           />
           <div id="content-wrapper" className="d-flex flex-column">
             <div id="content">
