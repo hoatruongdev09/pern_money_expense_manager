@@ -89,7 +89,7 @@ function CreateCategory({ selectedExpenseType, onCreateCategory }) {
     )
 }
 
-function CategoryManagerPage({ setAuth }) {
+function CategoryManagerPage({ setAuth, user }) {
     const [selectedType, setSelectedType] = useState(1);
     const [toggleSideBar, setToggleSideBar] = useState(false);
     const [searchValue, setSearchValue] = useState('')
@@ -200,7 +200,7 @@ function CategoryManagerPage({ setAuth }) {
                     />
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
-                            <TopBar toggleSidebar={activeToggleSideBar} />
+                            <TopBar toggleSidebar={activeToggleSideBar} user={user} />
                             <div className="container-fluid">
                                 <div className="d-sm-flex align-items-center justify-content-between mb-4">
                                     <h1 className="h3 mb-0 text-gray-800">Category</h1>

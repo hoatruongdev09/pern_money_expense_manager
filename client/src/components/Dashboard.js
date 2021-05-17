@@ -5,7 +5,7 @@ import MainDashboard from "./Dashboard/MainDashboard";
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
-function Dashboard() {
+function Dashboard({ user }) {
   const [toggleSideBar, setToggleSideBar] = useState(false);
 
   const activeToggleSideBar = (e) => {
@@ -27,7 +27,7 @@ function Dashboard() {
           />
           <div id="content-wrapper" className="d-flex flex-column">
             <div id="content">
-              <TopBar toggleSidebar={activeToggleSideBar} />
+              <TopBar toggleSidebar={activeToggleSideBar} user={user} />
               <div className="container-fluid">
                 <MainDashboard />
               </div>

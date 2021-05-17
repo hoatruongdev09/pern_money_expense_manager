@@ -24,6 +24,7 @@ import Home from "./components/Home";
 function App() {
   const [isAuthenticate, setAuthenticate] = useState(false);
   const [isWaitingAuth, setWaitingAuth] = useState(true);
+  const [userInfo, setUserInfo] = useState(null)
   const [authLink, setAuthLink] = useState("");
 
   const setAuth = (auth) => {
@@ -38,24 +39,37 @@ function App() {
   };
 
   async function isAuth() {
-    setWaitingAuth(true);
     try {
-      const response = await fetch(`${Host}/auth`, {
+      setWaitingAuth(true);
+      let response = await fetch(`${Host}/auth`, {
         method: "GET",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      if (response.status !== 200) {
-        setAuth(false);
-      } else {
-        setAuth(true);
-      }
+      let parseRes = await response.json();
       delayToStopWaiting(500);
+      if (response.status != 200) {
+        setAuth(false);
+        return
+      }
+      setAuth(true);
+      setWaitingAuth(true);
+      response = await fetch(`${Host}/user/${parseRes.user.user_id}`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      parseRes = await response.json()
+      delayToStopWaiting(500);
+      if (response.status != 200) {
+        return
+      }
+      setUserInfo(parseRes)
     } catch (error) {
       console.log(error);
       setAuth(false);
       delayToStopWaiting(500);
     }
   }
+
 
   const logOut = (e) => {
     localStorage.removeItem("token");
@@ -111,7 +125,7 @@ function App() {
               path="/dashboard"
               render={(props) =>
                 isAuthenticate ? (
-                  <Dashboard {...props} setAuth={setAuth} />
+                  <Dashboard {...props} setAuth={setAuth} user={userInfo} />
                 ) : (
                   <Redirect to="/login" />
                 )
@@ -122,7 +136,7 @@ function App() {
               path="/dashboard/transaction"
               render={(props) =>
                 isAuthenticate ? (
-                  <TransPage {...props} setAuth={setAuth} />
+                  <TransPage {...props} setAuth={setAuth} user={userInfo} />
                 ) : (
                   <Redirect to="/login" />
                 )
@@ -132,7 +146,8 @@ function App() {
               exact
               path="/dashboard/categories"
               render={
-                (props) => isAuthenticate ? (<CategoryManager {...props} setAuth={setAuth} />) : (<Redirect to="/login" />)
+                (props) => isAuthenticate ? (<CategoryManager {...props} setAuth={setAuth} user={userInfo} />)
+                  : (<Redirect to="/login" />)
               }
             />
           </Switch>

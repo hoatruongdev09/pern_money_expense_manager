@@ -15,7 +15,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import Host from "../AppURL";
 
-function TransactionPage() {
+function TransactionPage({ user }) {
   const [toggleSideBar, setToggleSideBar] = useState(false);
   const [windowType, setWindowType] = useState(0)
   const [logs, setLog] = useState([]);
@@ -133,7 +133,7 @@ function TransactionPage() {
           />
           <div id="content-wrapper" className="d-flex flex-column">
             <div id="content">
-              <TopBar toggleSidebar={activeToggleSideBar} />
+              <TopBar toggleSidebar={activeToggleSideBar} user={user} />
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-12">

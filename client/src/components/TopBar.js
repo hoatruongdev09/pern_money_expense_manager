@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-function TopBar({ toggleSidebar }) {
+function TopBar({ toggleSidebar, user }) {
   return (
     <Fragment>
       <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -240,7 +240,7 @@ function TopBar({ toggleSidebar }) {
             // onClick={(e) => triggerShowDropdown(e, "user-dropdown-class")}
             >
               <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                Douglas McGee
+                {user.user_name}
               </span>
               <img
                 className="img-profile rounded-circle"
