@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import AppPage from './Pages/AppPage/App'
 import LandingPage from './Pages/LandingPage/App'
+import AuthPage from './Pages/AuthPage/App'
 function App() {
   return (
     <div className="App" style={{ height: "100vh" }}>
@@ -13,6 +14,7 @@ function App() {
         <Switch>
           <Route exact path='/' component={LandingPage} />
           <Route path='/dashboard' component={AppPage} />
+          <Route path='/auth' component={AuthPage} />
         </Switch>
       </BrowserRouter>
     </div>

@@ -19,7 +19,10 @@ for (var i = 0; i < sidebarItems.length; i++) {
 window.addEventListener('DOMContentLoaded', (event) => {
     var w = window.innerWidth;
     if (w < 1200) {
-        document.getElementById('sidebar').classList.remove('active');
+        let sidebar = document.getElementById('sidebar')
+        if (sidebar != null && sidebar.classList != null) {
+            sidebar.classList.remove('active');
+        }
     }
 });
 window.addEventListener('resize', (event) => {

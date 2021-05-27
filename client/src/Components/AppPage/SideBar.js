@@ -1,6 +1,9 @@
+import { useEffect } from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
 const SideBar = ({ activeSideBar, onActiveSideBar }) => {
-    const { path, url } = useRouteMatch()
+    let pathname = window.location.pathname
+    let activeTransaction = pathname.match('/dashboard/transactions')
+    let activeDashboard = (pathname.match('/dashboard') || pathname.match('/dashboard/')) && !activeTransaction
     return (
         <div id="sidebar" className={activeSideBar ? "active" : ""}>
             <div className="sidebar-wrapper active">
@@ -16,16 +19,17 @@ const SideBar = ({ activeSideBar, onActiveSideBar }) => {
                 </div>
                 <div className="sidebar-menu">
                     <ul className="menu">
+
                         <li className="sidebar-title">Menu</li>
 
-                        <li className="sidebar-item active ">
-                            <Link to={`${url}/dashboard`} className='sidebar-link'>
+                        <li className={`sidebar-item ${activeDashboard ? 'active' : ''}`}>
+                            <Link to={`/dashboard`} className='sidebar-link'>
                                 <i className="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </Link>
                         </li>
-                        <li className="sidebar-item ">
-                            <Link to={`${url}/transactions`} className='sidebar-link'>
+                        <li className={`sidebar-item ${activeTransaction ? 'active' : ''}`}>
+                            <Link to={`/dashboard/transactions`} className='sidebar-link'>
                                 <i className="bi bi-cash-stack"></i>
                                 <span>Transactions</span>
                             </Link>
@@ -85,9 +89,10 @@ const SideBar = ({ activeSideBar, onActiveSideBar }) => {
 
                     </ul>
                 </div>
-                <button className="sidebar-toggler btn x"><i data-feather="x"></i></button>
+                {/* <button className="sidebar-toggler btn x"><i data-feather="x"></i></button> */}
+
             </div>
-        </div>
+        </div >
 
     )
 }

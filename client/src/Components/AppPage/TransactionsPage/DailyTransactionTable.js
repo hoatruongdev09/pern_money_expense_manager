@@ -1,50 +1,49 @@
-const DailyTransactionTable = () => {
+const DailyTransactionTable = ({ active }) => {
     return (
-        <div class="tab-pane fade table-responsive px-2" id="daily" role="tabpanel" aria-labelledby="daily-tab">
-            <table class="table table-hover mb-0">
+        <div className={`"tab-pane fade table-responsive px-2 ${active ? "active show" : ""}`}>
+            <table className="table table-hover mb-0">
                 <thead>
                     <tr>
                         <th>NOTE</th>
-                        <th>CATEGORY</th>
-                        <th>TYPE</th>
-                        <th>MONEY AMOUNT</th>
+                        <th style={{ textAlign: 'right' }}>MONEY AMOUNT</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr className="table-info">
-                        <td class="text-bold-500">Michael Right</td>
-                        <td>$15/hr</td>
-                        <td class="text-bold-500">UI/UX</td>
-                        <td><a href="#"><i class="badge-circle badge-circle-light-secondary font-medium-1" data-feather="mail"></i></a></td>
+                        <td>
+                            <div className="text-bold-500 float-left">Michael Right</div>
+                            <span class="badge bg-info text-dark">Income</span>
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                            <div> $500</div>
+                            <span class="badge bg-secondary">Cash</span>
+                        </td>
                     </tr>
                     <tr className="table-danger">
-                        <td class="text-bold-500">Morgan Vanblum</td>
-                        <td>$13/hr</td>
-                        <td class="text-bold-500">Graphic concepts</td>
-                        <td><a href="#"><i class="badge-circle badge-circle-light-secondary font-medium-1" data-feather="mail"></i></a></td>
+                        <td>
+                            <div className="text-bold-500 float-left">Michael Right</div>
+                            <span class="badge bg-danger text-dark">Expense</span>
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                            <div> $500</div>
+                            <span class="badge bg-secondary">Account</span>
+                        </td>
                     </tr>
                     <tr className="table-warning">
-                        <td class="text-bold-500">Tiffani Blogz</td>
-                        <td>$15/hr</td>
-                        <td class="text-bold-500">Animation</td>
-                        <td><a href="#"><i class="badge-circle badge-circle-light-secondary font-medium-1" data-feather="mail"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td class="text-bold-500">Ashley Boul</td>
-                        <td>$15/hr</td>
-                        <td class="text-bold-500">Animation</td>
-                        <td><a href="#"><i class="badge-circle badge-circle-light-secondary font-medium-1" data-feather="mail"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td class="text-bold-500">Mikkey Mice</td>
-                        <td>$15/hr</td>
-                        <td class="text-bold-500">Animation</td>
-                        <td><a href="#"><i class="badge-circle badge-circle-light-secondary font-medium-1" data-feather="mail"></i></a></td>
+                        <td>
+                            <div className="text-bold-500 float-left">Michael Right</div>
+                            <span class="badge bg-warning text-dark">Transfer</span>
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                            <div> $500</div>
+                            <span class="badge bg-secondary">Cash</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     )
 }
+
 
 export default DailyTransactionTable

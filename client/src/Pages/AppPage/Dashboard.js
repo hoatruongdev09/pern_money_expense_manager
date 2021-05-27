@@ -1,4 +1,7 @@
-const Dashboard = () => {
+import { useEffect } from "react"
+
+const Dashboard = ({ }) => {
+
     return (
         <>
             <div className="page-heading">
