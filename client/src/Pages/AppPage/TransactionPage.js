@@ -6,9 +6,16 @@ import MonthlyTransactionPage from '../../Components/AppPage/TransactionsPage/Mo
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import API from '../../Utils/API'
+
 const TransactionPage = ({ }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [timeTab, setTimeTab] = useState(0)
+
+    useEffect(async () => {
+        await fetchTransactionByMonth()
+    }, [])
+
     const CustomDatePicker = forwardRef(
         ({ value, onClick }, ref) => (
             <button onClick={onClick} ref={ref} className=" btn btn-primary mx-1">{value}</button>
@@ -44,6 +51,44 @@ const TransactionPage = ({ }) => {
         }
         setStartDate(time)
     }
+
+    const fetchTransactionByDate = async () => {
+        const currentTime = startDate
+        const fromDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 0, 0, 0, 0)
+        const toDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 23, 59, 59, 99)
+        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+    }
+    const fetchTransactionByMonth = async () => {
+        const currentTime = startDate
+        const fromDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), 1)
+        const toDate = new Date(currentTime.getFullYear(), currentTime.getMonth() + 1, 0)
+        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+    }
+    const fetchTransactionByYear = async () => {
+        const currentTime = startDate
+        const fromDate = new Date(currentTime.getFullYear(), 1, 1)
+        const toDate = new Date(currentTime.getFullYear(), 12, 31)
+        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+    }
+
+    const fetchTransactionByTime = async (from, to) => {
+        try {
+
+            const response = await API.get(`/money_expense/?startDate=${from}&endDate=${to}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+            if (response && response.status == 200) {
+                console.log(response)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <>
             <div className="page-heading">

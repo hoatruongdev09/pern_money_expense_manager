@@ -4,13 +4,14 @@ const db = require('../db')
 const listDetailExpense = async (is_admin, user_id, startDate, endDate) => {
     if (endDate == null) { endDate = Math.floor(new Date() / 1000) }
     if (startDate == null) { startDate = endDate }
+    console.log(startDate, "  ", endDate)
     try {
         if (is_admin) {
             const moneys = await db.query("SELECT * FROM money_expense_detail WHERE date_created>=to_timestamp($1) AND date_created<=to_timestamp($2) ORDER BY date_created desc", [startDate, endDate]);
             return moneys.rows
         }
         const moneys = await db.query(
-            "SELECT * FROM money_expense_detail WHERE user_id=$1 date_created>=to_timestamp($2) AND date_created<=to_timestamp($3) ORDER BY date_created desc",
+            "SELECT * FROM money_expense_detail WHERE user_id=$1 AND date_created>=to_timestamp($2) AND date_created<=to_timestamp($3) ORDER BY date_created desc",
             [user_id, startDate, endDate]
         );
         return moneys.rows

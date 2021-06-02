@@ -1,12 +1,15 @@
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom"
 import { useState, useEffect } from 'react'
 
+
 import Topbar from '../../Components/AppPage/TopBar'
 import Sidebar from '../../Components/AppPage/SideBar'
 import Dashboard from './Dashboard'
 import Transaction from './TransactionPage'
+import CreateTransaction from '../../Components/AppPage/TransactionsPage/CreateTransaction'
 
 import API from '../../Utils/API'
+import './App.css'
 
 const App = () => {
     const { path, url } = useRouteMatch()
@@ -66,6 +69,7 @@ const App = () => {
                     </Switch>
                 </div>
             </div>
+            <CreateTransaction />
         </div>
     );
 };

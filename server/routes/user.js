@@ -2,6 +2,8 @@ const Router = require('express').Router()
 const db = require('../db')
 const error = require('../errors/error')
 
+const authorize = require('../middlewares/authorize')
+
 Router.get('/:id', async (req, res) => {
     try {
         const id = req.params.id
@@ -14,5 +16,6 @@ Router.get('/:id', async (req, res) => {
         error.internalError(res, err.message)
     }
 })
+
 
 module.exports = Router

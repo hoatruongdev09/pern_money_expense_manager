@@ -11,6 +11,7 @@ const authorize = async (req, res, next) => {
         }
         const payload = jwt.verify(token, process.env.jwtSecret)
         req.user = payload.user
+
         next()
     } catch (err) {
         error.internalError(res, err.message)

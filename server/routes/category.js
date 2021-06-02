@@ -10,6 +10,7 @@ Router.get('/', lowLevelAuthorization, async (req, res) => {
     try {
         res.json(await categoryProvider.listCategories(!req.user, req.user.is_admin, req.user.user_id))
     } catch (err) {
+        console.log(err)
         error.internalError(res, err.message)
     }
 })

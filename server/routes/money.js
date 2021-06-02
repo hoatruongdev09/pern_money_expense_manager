@@ -27,6 +27,7 @@ Router.get("/", authorize, async (req, res) => {
         const { startDate, endDate } = req.query
         return res.json(await moneyProvider.listDetailExpense(req.user.is_admin, req.user.user_id, startDate ?? null, endDate ?? null))
     } catch (err) {
+        console.log(err)
         error.internalError(res, err.message);
     }
 });
