@@ -69,7 +69,7 @@ const App = () => {
                     </Switch>
                 </div>
             </div>
-            <CreateTransaction />
+
         </div>
     );
 };

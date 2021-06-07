@@ -72,6 +72,7 @@ Router.post("/", authorize, async (req, res) => {
         } = req.body;
         return res.json(await moneyProvider.createRecord(user_id, expense_type_id, category_id, money_amount, note, detail, method, date_created))
     } catch (err) {
+        console.log(err)
         error.internalError(res, err.message);
     }
 });

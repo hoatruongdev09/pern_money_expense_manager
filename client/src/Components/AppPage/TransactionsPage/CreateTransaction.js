@@ -6,7 +6,7 @@ import API from '../../../Utils/API'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const CreateTransaction = () => {
+const CreateTransaction = ({ onAddTransaction }) => {
     const [transactionType, setTransactionType] = useState(1)
     const [note, setNote] = useState('')
     const [money, setMoney] = useState(0)
@@ -17,7 +17,6 @@ const CreateTransaction = () => {
     const [date, setDate] = useState(new Date())
     const [listCategory, setListCategory] = useState([])
     const [listMethod, setListMethod] = useState([])
-    let cats = []
 
     useEffect(async () => {
         await fetchAllCategory()
@@ -38,7 +37,6 @@ const CreateTransaction = () => {
             })
             if (response) {
                 setListCategory(response.data)
-                cats = response.data
             }
         } catch (error) {
             console.log(error)
@@ -50,21 +48,55 @@ const CreateTransaction = () => {
     }
     const onSubmitTransaction = async (e) => {
         e.preventDefault()
-        console.log('type: ', transactionType);
-        console.log('note: ', note);
-        console.log('money: ', money);
-        console.log('category: ', category);
-        console.log('detail: ', detail);
+        // console.log('type: ', transactionType);
+        // console.log('note: ', note);
+        // console.log('money: ', money);
+        // console.log('category: ', getGetListCategoryToShow(listCategory)[category]);
+        // console.log('cat index: ', category)
+        // console.log('detail: ', detail);
+        var selectedCategory = getGetListCategoryToShow(listCategory)[category]
+        try {
+            var data = {
+                expense_type_id: transactionType,
+                category_id: selectedCategory.id,
+                money_amount: money,
+                note: note,
+                detail: detail,
+                method: method,
+                date_created: Math.floor(new Date(date) / 1000)
+            }
+            const response = await API.post('/money_expense', data, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }).catch(err => {
+                console.log('err: ', err)
+            })
+            if (response) {
+                console.log(response)
+                onAddTransaction({
+                    ...response.data,
+                    category_name: selectedCategory.category_name,
+                    type_name: transactionType == 1 ? "Income" : (transactionType == 2 ? "Expense" : "Transfer"),
+                    method_name: method == 1 ? "Cash" : (method == 2 ? "Account" : "Card")
+                })
+            }
+        } catch (error) {
+
+        }
+
     }
-    const onChangeMethod = (e) => {
+    const onChangeMethod = (e, method) => {
         e.preventDefault()
+        setCategory(0)
+        setMethod(method)
     }
     return (
         <>
             <button className="rounded btn btn-primary fixed-button" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                 <FontAwesomeIcon icon={faPlus} size='1x' />
             </button>
-            <div className="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style={{ display: 'none' }} aria-hidden="true">
+            <div className="modal fade" id="exampleModalCenter" tabIndex="-1" aria-labelledby="exampleModalCenterTitle" style={{ display: 'none' }} aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -91,7 +123,8 @@ const CreateTransaction = () => {
                                                     selected={date}
                                                     onChange={dateChange => setDate(dateChange)}
                                                     className="form-control w-100"
-                                                    dateFormat={`dd MMM, yyyy`}
+                                                    showTimeSelect={true}
+                                                    dateFormat={`dd MMM, yyyy hh:mm a`}
                                                 />
                                             </div>
                                         </div>
@@ -113,17 +146,17 @@ const CreateTransaction = () => {
                                         <div className="col-md-8 form-group">
                                             <select className="form-select" onChange={e => setCategory(e.target.value)} value={category}>
                                                 {
-                                                    getGetListCategoryToShow(listCategory).map(cat => (
-                                                        <option key={`category-${cat.id}`} defaultValue={category == cat.id} value={cat.id}>{cat.category_name}</option>
+                                                    getGetListCategoryToShow(listCategory).map((cat, index) => (
+                                                        <option key={`category-${cat.id}`} defaultValue={category == index} value={index}>{cat.category_name}</option>
                                                     ))
                                                 }
                                             </select>
                                         </div>
                                         <div className="col-md-12 form-group">
                                             <div className="buttons text-center">
-                                                <a role='button' onClick={e => setMethod(1)} className={`btn-sm w-25 btn ${method == 1 ? 'btn-primary' : 'btn-outline-secondary'}`}>Cash</a>
-                                                <a role='button' onClick={e => setMethod(2)} className={`btn-sm w-25 btn ${method == 2 ? 'btn-primary' : 'btn-outline-secondary'}`}>Account</a>
-                                                <a role='button' onClick={e => setMethod(3)} className={`btn-sm w-25 btn ${method == 3 ? 'btn-primary' : 'btn-outline-secondary'}`}>Card</a>
+                                                <a role='button' onClick={e => onChangeMethod(e, 1)} className={`btn-sm w-25 btn ${method == 1 ? 'btn-primary' : 'btn-outline-secondary'}`}>Cash</a>
+                                                <a role='button' onClick={e => onChangeMethod(e, 2)} className={`btn-sm w-25 btn ${method == 2 ? 'btn-primary' : 'btn-outline-secondary'}`}>Account</a>
+                                                <a role='button' onClick={e => onChangeMethod(e, 3)} className={`btn-sm w-25 btn ${method == 3 ? 'btn-primary' : 'btn-outline-secondary'}`}>Card</a>
                                             </div>
                                         </div>
                                         <div className="col-md-4">

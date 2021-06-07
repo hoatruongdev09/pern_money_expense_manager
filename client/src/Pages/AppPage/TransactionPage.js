@@ -1,19 +1,24 @@
 import { useState, forwardRef, useEffect } from 'react'
 import DailyTransactionTable from '../../Components/AppPage/TransactionsPage/DailyTransactionTable'
-import WeeklyTransactionPage from '../../Components/AppPage/TransactionsPage/WeeklyTransactionPage'
 import MonthlyTransactionPage from '../../Components/AppPage/TransactionsPage/MonthlyTransactionPage'
+import YearlyTransactionPage from '../../Components/AppPage/TransactionsPage/YearlyTransactionPage'
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+
 import API from '../../Utils/API'
+import CreateTransaction from '../../Components/AppPage/TransactionsPage/CreateTransaction'
+import formatMoney from '../../Utils/formatMoney'
 
 const TransactionPage = ({ }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [timeTab, setTimeTab] = useState(0)
 
+    const [transactions, setTransactions] = useState([])
+
     useEffect(async () => {
-        await fetchTransactionByMonth()
+        await fetchTransactionByDate()
     }, [])
 
     const CustomDatePicker = forwardRef(
@@ -21,9 +26,43 @@ const TransactionPage = ({ }) => {
             <button onClick={onClick} ref={ref} className=" btn btn-primary mx-1">{value}</button>
         ),
     );
+    const onSetTimeTab = async (value) => {
+        setTimeTab(value);
+        if (value == 0) {
+            await fetchTransactionByDate()
+        } else if (value == 1) {
+            await fetchTransactionByMonth()
+        } else if (value == 2) {
+            await fetchTransactionByYear()
+        }
+    }
+    const onAddTransaction = (transaction) => {
+        setTransactions([...transactions, transaction])
+    }
+    const onSetSelectDate = async (time) => {
+        setStartDate(time)
+        if (timeTab == 0) {
+            const { fromDate, toDate } = getStartAndEndDate(time)
+            const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+            setTransactions(data)
+            return
+        }
+        if (timeTab == 1) {
+            const { fromDate, toDate } = getStartAndEndMonth(time)
+            const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+            console.log(data)
+            setTransactions(data)
+            return
+        }
+        if (timeTab == 2) {
+            const { fromDate, toDate } = getStartAndEndYear(time)
+            const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+            setTransactions(data)
+            return
+        }
 
-
-    const onChangeDate = (direction) => {
+    }
+    const onChangeDate = async (direction) => {
         let value = 0
         switch (timeTab) {
             case 0:
@@ -49,28 +88,53 @@ const TransactionPage = ({ }) => {
                 time.setFullYear(value)
                 break;
         }
-        setStartDate(time)
-    }
+        await onSetSelectDate(time)
 
+    }
+    const calculateTotalExpense = (transactions) => {
+        let total = 0
+        transactions.forEach(trans => {
+            if (trans.expense_type_id == 2) { total += parseInt(trans.money_amount) }
+        })
+        return total
+    }
+    const calculateTotalIncome = (transactions) => {
+        let total = 0
+        transactions.forEach(trans => {
+            if (trans.expense_type_id == 1) { total += parseInt(trans.money_amount) }
+        })
+        return total
+    }
     const fetchTransactionByDate = async () => {
-        const currentTime = startDate
-        const fromDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 0, 0, 0, 0)
-        const toDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 23, 59, 59, 99)
+        const { fromDate, toDate } = getStartAndEndDate(startDate)
         const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+        setTransactions(data)
     }
     const fetchTransactionByMonth = async () => {
-        const currentTime = startDate
-        const fromDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), 1)
-        const toDate = new Date(currentTime.getFullYear(), currentTime.getMonth() + 1, 0)
+        const { fromDate, toDate } = getStartAndEndMonth(startDate)
         const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+        setTransactions(data)
     }
     const fetchTransactionByYear = async () => {
-        const currentTime = startDate
+        const { fromDate, toDate } = getStartAndEndYear(startDate)
+        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+        setTransactions(data)
+    }
+    const getStartAndEndDate = (currentTime) => {
+        const fromDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 0, 0, 0, 0)
+        const toDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 23, 59, 59, 99)
+        return { fromDate, toDate }
+    }
+    const getStartAndEndMonth = (currentTime) => {
+        const fromDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), 1)
+        const toDate = new Date(currentTime.getFullYear(), currentTime.getMonth() + 1, 0)
+        return { fromDate, toDate }
+    }
+    const getStartAndEndYear = (currentTime) => {
         const fromDate = new Date(currentTime.getFullYear(), 1, 1)
         const toDate = new Date(currentTime.getFullYear(), 12, 31)
-        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+        return { fromDate, toDate }
     }
-
     const fetchTransactionByTime = async (from, to) => {
         try {
 
@@ -79,13 +143,13 @@ const TransactionPage = ({ }) => {
                     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
                 }
             }).catch(err => {
-                console.log(err)
+                return []
             })
             if (response && response.status == 200) {
-                console.log(response)
+                return response.data
             }
         } catch (error) {
-            console.log(error)
+            return []
         }
     }
 
@@ -98,13 +162,13 @@ const TransactionPage = ({ }) => {
                             <h3>Transactions</h3>
                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                 <li className="nav-item" role="presentation">
-                                    <a role="button" onClick={e => setTimeTab(0)} className={`nav-link ${timeTab == 0 ? 'active' : ''}`}>Daily</a>
+                                    <a role="button" onClick={e => onSetTimeTab(0)} className={`nav-link ${timeTab == 0 ? 'active' : ''}`}>Daily</a>
                                 </li>
                                 <li className="nav-item" role="presentation">
-                                    <a role="button" onClick={e => setTimeTab(1)} className={`nav-link ${timeTab == 1 ? 'active' : ''}`}>Monthly</a>
+                                    <a role="button" onClick={e => onSetTimeTab(1)} className={`nav-link ${timeTab == 1 ? 'active' : ''}`}>Monthly</a>
                                 </li>
                                 <li className="nav-item" role="presentation">
-                                    <a role="button" onClick={e => setTimeTab(2)} className={`nav-link ${timeTab == 2 ? 'active' : ''}`}>Yearly</a>
+                                    <a role="button" onClick={e => onSetTimeTab(2)} className={`nav-link ${timeTab == 2 ? 'active' : ''}`}>Yearly</a>
                                 </li>
                             </ul>
                         </div>
@@ -128,7 +192,7 @@ const TransactionPage = ({ }) => {
                                 <div className="float-left">
                                     <DatePicker
                                         selected={startDate}
-                                        onChange={date => setStartDate(date)}
+                                        onChange={date => onSetSelectDate(date)}
                                         customInput={<CustomDatePicker />}
                                         showMonthYearPicker={timeTab == 1}
                                         showYearPicker={timeTab == 2}
@@ -147,13 +211,13 @@ const TransactionPage = ({ }) => {
                                 <div className="card">
                                     <div className="card-header">
                                         {timeTab == 0 ? (<h4 className="card-title">Daily summary</h4>) : (<></>)}
-                                        {timeTab == 1 ? (<h4 className="card-title">Weekly summary</h4>) : (<></>)}
-                                        {timeTab == 2 ? (<h4 className="card-title">Monthly summary</h4>) : (<></>)}
+                                        {timeTab == 1 ? (<h4 className="card-title">Monthly summary</h4>) : (<></>)}
+                                        {timeTab == 2 ? (<h4 className="card-title">Yearly summary</h4>) : (<></>)}
                                     </div>
                                     <div className="card-content">
-                                        {timeTab == 0 ? (<DailyTransactionTable active={timeTab == 0} />) : (<></>)}
-                                        {timeTab == 1 ? (<WeeklyTransactionPage active={timeTab == 1} />) : (<></>)}
-                                        {timeTab == 2 ? (<MonthlyTransactionPage active={timeTab == 2} />) : (<></>)}
+                                        {timeTab == 0 ? (<DailyTransactionTable active={timeTab == 0} transactions={transactions} />) : (<></>)}
+                                        {timeTab == 1 ? (<MonthlyTransactionPage active={timeTab == 1} transactions={transactions} selectDate={startDate} />) : (<></>)}
+                                        {timeTab == 2 ? (<YearlyTransactionPage active={timeTab == 2} transactions={transactions} />) : (<></>)}
                                     </div>
                                 </div>
 
@@ -163,24 +227,24 @@ const TransactionPage = ({ }) => {
                             <div className="card">
                                 <div className="card-header">
                                     {timeTab == 0 ? (<h4 className="card-title">Daily summary</h4>) : (<></>)}
-                                    {timeTab == 1 ? (<h4 className="card-title">Weekly summary</h4>) : (<></>)}
-                                    {timeTab == 2 ? (<h4 className="card-title">Monthly summary</h4>) : (<></>)}
+                                    {timeTab == 1 ? (<h4 className="card-title">Monthly summary</h4>) : (<></>)}
+                                    {timeTab == 2 ? (<h4 className="card-title">Yearly summary</h4>) : (<></>)}
                                 </div>
                                 <div className="card-content">
                                     <div className="table-responsive px-2">
-                                        <table className="table table-hover mb-0">
+                                        <table className="table table-hover">
                                             <tbody>
                                                 <tr>
                                                     <td className="text-bold-500">Income</td>
-                                                    <td style={{ textAlign: 'right' }}><span className="w-100 float-right">$500</span></td>
+                                                    <td style={{ textAlign: 'right' }}><span className="w-100 float-right">{formatMoney(calculateTotalIncome(transactions))}</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td className="text-bold-500">Expense</td>
-                                                    <td style={{ textAlign: 'right' }}> <span className="w-100 float-right">$250</span></td>
+                                                    <td style={{ textAlign: 'right' }}> <span className="w-100 float-right">{formatMoney(calculateTotalExpense(transactions))}</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td className="text-bold-500">Balance</td>
-                                                    <td style={{ textAlign: 'right' }}> <span className="w-100 float-right">$250</span></td>
+                                                    <td style={{ textAlign: 'right' }}> <span className="w-100 float-right">{formatMoney(calculateTotalIncome(transactions) - calculateTotalExpense(transactions))}</span></td>
                                                 </tr>
 
                                             </tbody>
@@ -193,7 +257,7 @@ const TransactionPage = ({ }) => {
 
                 </section>
             </div>
-
+            <CreateTransaction onAddTransaction={onAddTransaction} />
         </>
     )
 }

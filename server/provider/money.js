@@ -73,7 +73,7 @@ const createRecord = async (user_id, expense_type_id, category_id, money_amount,
 
         return money.rows[0]
     } catch (error) {
-        throw err
+        throw error
     }
 
 }
