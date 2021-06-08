@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 import { useState, forwardRef, useEffect } from 'react'
 import DailyTransactionTable from '../../Components/AppPage/TransactionsPage/DailyTransactionTable'
 import MonthlyTransactionPage from '../../Components/AppPage/TransactionsPage/MonthlyTransactionPage'
@@ -17,9 +18,38 @@ const TransactionPage = ({ }) => {
 
     const [transactions, setTransactions] = useState([])
 
+    let query = new URLSearchParams(useLocation().search)
+
     useEffect(async () => {
-        await fetchTransactionByDate()
+        const tabShow = query.get('tab')
+        console.log('query: ', tabShow)
+        const timeShow = query.get('time')
+        let time = new Date()
+        if (timeShow != null) {
+            time = new Date(timeShow)
+            setStartDate(time)
+        }
+        switch (tabShow) {
+            case 'daily':
+                setTimeTab(0)
+                await fetchDateTransactionByTime(time)
+                break
+            case 'monthly':
+                setTimeTab(1)
+                await fetchMonthTransactionByTime(time)
+                break
+            case 'yearly':
+                setTimeTab(2)
+                await fetchYearTransactionByTime(time)
+                break
+            default:
+                setTimeTab(0)
+                await fetchDateTransactionByTime(time)
+                break
+        }
+
     }, [])
+
 
     const CustomDatePicker = forwardRef(
         ({ value, onClick }, ref) => (
@@ -37,30 +67,41 @@ const TransactionPage = ({ }) => {
         }
     }
     const onAddTransaction = (transaction) => {
-        setTransactions([...transactions, transaction])
+        const tranDate = transaction.date_created
+        const { fromDate, toDate } = getStartAndEndDate(startDate)
+        if (new Date(tranDate) - new Date(fromDate) >= 0 && new Date(tranDate) - new Date(toDate) <= 0) {
+            setTransactions([...transactions, transaction])
+        }
     }
     const onSetSelectDate = async (time) => {
         setStartDate(time)
         if (timeTab == 0) {
-            const { fromDate, toDate } = getStartAndEndDate(time)
-            const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
-            setTransactions(data)
+            await fetchDateTransactionByTime(time)
             return
         }
         if (timeTab == 1) {
-            const { fromDate, toDate } = getStartAndEndMonth(time)
-            const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
-            console.log(data)
-            setTransactions(data)
+            fetchMonthTransactionByTime(time)
             return
         }
         if (timeTab == 2) {
-            const { fromDate, toDate } = getStartAndEndYear(time)
-            const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
-            setTransactions(data)
+            fetchYearTransactionByTime(time)
             return
         }
-
+    }
+    const fetchDateTransactionByTime = async (time) => {
+        const { fromDate, toDate } = getStartAndEndDate(time)
+        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+        setTransactions(data)
+    }
+    const fetchMonthTransactionByTime = async (time) => {
+        const { fromDate, toDate } = getStartAndEndMonth(time)
+        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+        setTransactions(data)
+    }
+    const fetchYearTransactionByTime = async (time) => {
+        const { fromDate, toDate } = getStartAndEndYear(time)
+        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+        setTransactions(data)
     }
     const onChangeDate = async (direction) => {
         let value = 0
@@ -217,7 +258,7 @@ const TransactionPage = ({ }) => {
                                     <div className="card-content">
                                         {timeTab == 0 ? (<DailyTransactionTable active={timeTab == 0} transactions={transactions} />) : (<></>)}
                                         {timeTab == 1 ? (<MonthlyTransactionPage active={timeTab == 1} transactions={transactions} selectDate={startDate} />) : (<></>)}
-                                        {timeTab == 2 ? (<YearlyTransactionPage active={timeTab == 2} transactions={transactions} />) : (<></>)}
+                                        {timeTab == 2 ? (<YearlyTransactionPage active={timeTab == 2} transactions={transactions} selectDate={startDate} />) : (<></>)}
                                     </div>
                                 </div>
 
