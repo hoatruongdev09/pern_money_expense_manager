@@ -1,9 +1,11 @@
 import formatMoney from '../../../Utils/formatMoney'
 import { Modal, Button } from 'react-bootstrap'
+import { Link, useHistory } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid';
 
 const MonthlyTransactionPage = ({ active, transactions, selectDate }) => {
     const startDate = new Date(selectDate.getFullYear(), selectDate.getMonth(), 1)
-
+    const history = useHistory()
     const createCalendar = () => {
         const startDay = startDate.getDay()
         const calendarDate = 7 * 6;
@@ -57,37 +59,34 @@ const MonthlyTransactionPage = ({ active, transactions, selectDate }) => {
         }
         return false
     }
-    const onShowDateTransactions = (e, date) => {
-        e.preventDefault()
-        console.log('select date: ', date)
-    }
-    const ModalDateTransactions = (props) => {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Modal heading
-              </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <h4>Centered Modal</h4>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                        dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                        consectetur ac, vestibulum at eros.
-              </p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
+
+    // const ModalDateTransactions = (props) => {
+    //     return (
+    //         <Modal
+    //             {...props}
+    //             size="lg"
+    //             aria-labelledby="contained-modal-title-vcenter"
+    //             centered
+    //         >
+    //             <Modal.Header closeButton>
+    //                 <Modal.Title id="contained-modal-title-vcenter">
+    //                     Modal heading
+    //           </Modal.Title>
+    //             </Modal.Header>
+    //             <Modal.Body>
+    //                 <h4>Centered Modal</h4>
+    //                 <p>
+    //                     Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+    //                     dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+    //                     consectetur ac, vestibulum at eros.
+    //           </p>
+    //             </Modal.Body>
+    //             <Modal.Footer>
+    //                 <Button onClick={props.onHide}>Close</Button>
+    //             </Modal.Footer>
+    //         </Modal>
+    //     );
+    // }
     const CreateCell = ({ date }) => {
         const totalIncome = getDateTotalIncome(date)
         const totalExpense = getDateTotalExpense(date)
@@ -102,13 +101,20 @@ const MonthlyTransactionPage = ({ active, transactions, selectDate }) => {
                 </td>
             )
         }
+        const linkTarget = {
+            pathname: `/dashboard/transactions?tab=daily&time=${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`,
+            key: uuidv4(),
+            state: {
+                applied: true
+            }
+        }
         return (
             <td className="border align-top month-table-cell">
-                <a role="button" onClick={e => onShowDateTransactions(e, date)}><span>{date.getDate()}</span></a>
+                <Link to={linkTarget}><span>{date.getDate()}</span></Link>
                 <div>
-                    <p class="text-end mb-1 text-info" style={{ fontSize: 'small' }}>{formatMoney(totalIncome)}</p>
-                    <p class="text-end mb-1 text-danger" style={{ fontSize: 'small' }}>{formatMoney(totalExpense)}</p>
-                    <p class="text-end mb-1 text-secondary" style={{ fontSize: 'small' }}>{formatMoney(dateBalance)}</p>
+                    <p className="text-end mb-1 text-info" style={{ fontSize: 'small' }}>{formatMoney(totalIncome)}</p>
+                    <p className="text-end mb-1 text-danger" style={{ fontSize: 'small' }}>{formatMoney(totalExpense)}</p>
+                    <p className="text-end mb-1 text-secondary" style={{ fontSize: 'small' }}>{formatMoney(dateBalance)}</p>
                 </div>
             </td>
         )
@@ -116,8 +122,8 @@ const MonthlyTransactionPage = ({ active, transactions, selectDate }) => {
     return (
         <>
             <div className={`"tab-pane fade ${active ? "active show" : ""}`}>
-                <div class="table-responsive-sm">
-                    <table class="table mb-0">
+                <div className="table-responsive-sm">
+                    <table className="table mb-0">
                         <thead>
                             <tr>
                                 <th className="text-center"> <h6>Sun</h6></th>
@@ -131,13 +137,13 @@ const MonthlyTransactionPage = ({ active, transactions, selectDate }) => {
                         </thead>
                         <tbody>
                             {
-                                createCalendar().map(week => (
+                                createCalendar().map((week, index) => (
 
-                                    <tr>
-                                        {week.map(date => (
+                                    <tr key={`week-${index}`}>
+                                        {week.map((date, index) => (
                                             date.getMonth() == startDate.getMonth() ? (
-                                                checkIfWeekHaveDayInCurrentMonth(week) ? (<CreateCell date={date} />) : <td className="border align-top month-table-cell"></td>
-                                            ) : <td className="border align-top month-table-cell"></td>
+                                                checkIfWeekHaveDayInCurrentMonth(week) ? (<CreateCell key={`month-${index}`} date={date} />) : <td key={`month-${index}`} className="border align-top month-table-cell"></td>
+                                            ) : <td key={`month-${index}`} className="border align-top month-table-cell"></td>
                                         ))}
                                     </tr>
                                 ))
@@ -146,7 +152,7 @@ const MonthlyTransactionPage = ({ active, transactions, selectDate }) => {
                     </table>
                 </div>
             </div>
-            <ModalDateTransactions />
+            {/* <ModalDateTransactions /> */}
         </>
     )
 

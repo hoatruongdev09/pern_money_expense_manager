@@ -10,7 +10,7 @@ import AuthPage from './Pages/AuthPage/App'
 function App() {
   return (
     <div className="App" style={{ height: "100vh" }}>
-      <BrowserRouter>
+      <BrowserRouter forceRefresh={true}>
         <Switch>
           <Route exact path='/' component={LandingPage} />
           <Route path='/dashboard' component={AppPage} />
