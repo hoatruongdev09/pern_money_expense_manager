@@ -1,10 +1,19 @@
 import formatMoney from '../../../Utils/formatMoney'
 import CreateTransaction from './CreateTransaction'
+import { Modal, Button } from 'react-bootstrap'
+import { useState } from 'react'
 
-const DailyTransactionTable = ({ active, transactions }) => {
+
+
+
+const DailyTransactionTable = ({ active, transactions, showDetailTransaction }) => {
+
     const sortTransactionByTime = () => {
         transactions.sort((a, b) => new Date(b.date_created) - new Date(a.date_created))
         return transactions
+    }
+    const onShowDetailTransaction = (transaction) => {
+        showDetailTransaction(transaction)
     }
     const CreateTransactions = () => {
         const sortedTransactions = sortTransactionByTime()
@@ -16,7 +25,7 @@ const DailyTransactionTable = ({ active, transactions }) => {
         } else {
             return (
                 sortedTransactions.map(transaction => (
-                    <tr key={`transaction-record-${transaction.id}`} className={`table-${transaction.expense_type_id == 1 ? 'info' : (transaction.expense_type_id == 2 ? 'danger' : 'warning')}`}>
+                    <tr onClick={e => onShowDetailTransaction(transaction)} key={`transaction-record-${transaction.id}`} className={`table-${transaction.expense_type_id == 1 ? 'info' : (transaction.expense_type_id == 2 ? 'danger' : 'warning')}`} data-bs-toggle="modal" data-bs-target="#detailTransactionModal">
                         <td>
                             <div className="text-bold-500 float-left">{transaction.note}</div>
                             <span className={`badge bg-${transaction.expense_type_id == 1 ? 'info' : (transaction.expense_type_id == 2 ? 'danger' : 'warning')} text-dark`}>{transaction.type_name}</span>
@@ -31,23 +40,26 @@ const DailyTransactionTable = ({ active, transactions }) => {
             )
         }
     }
+
     return (
-        <div className={`"tab-pane fade table-responsive px-2 ${active ? "active show" : ""}`}>
-            <table className="table table-hover ">
-                <thead>
-                    <tr>
-                        <th>NOTE</th>
-                        <th style={{ textAlign: 'right' }}>MONEY AMOUNT</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <>
+            <div className={`"tab-pane fade table-responsive px-2 ${active ? "active show" : ""}`}>
+                <table className="table table-hover ">
+                    <thead>
+                        <tr>
+                            <th>NOTE</th>
+                            <th style={{ textAlign: 'right' }}>MONEY AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    <CreateTransactions />
+                        <CreateTransactions />
+                    </tbody>
+                </table>
+            </div>
 
 
-                </tbody>
-            </table>
-        </div>
+        </>
     )
 }
 

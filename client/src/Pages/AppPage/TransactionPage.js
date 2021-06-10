@@ -1,9 +1,10 @@
 import { useLocation } from 'react-router-dom'
+
 import { useState, forwardRef, useEffect } from 'react'
 import DailyTransactionTable from '../../Components/AppPage/TransactionsPage/DailyTransactionTable'
 import MonthlyTransactionPage from '../../Components/AppPage/TransactionsPage/MonthlyTransactionPage'
 import YearlyTransactionPage from '../../Components/AppPage/TransactionsPage/YearlyTransactionPage'
-
+import TransactionDetail from '../../Components/AppPage/TransactionsPage/TransactionDetail';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -13,16 +14,18 @@ import CreateTransaction from '../../Components/AppPage/TransactionsPage/CreateT
 import formatMoney from '../../Utils/formatMoney'
 
 const TransactionPage = ({ }) => {
+
+    const [listCategory, setListCategory] = useState([])
     const [startDate, setStartDate] = useState(new Date());
     const [timeTab, setTimeTab] = useState(0)
-
     const [transactions, setTransactions] = useState([])
+    const [selectTransaction, setSelectTransaction] = useState(null)
 
     let query = new URLSearchParams(useLocation().search)
 
     useEffect(async () => {
+        await fetchAllCategory()
         const tabShow = query.get('tab')
-        console.log('query: ', tabShow)
         const timeShow = query.get('time')
         let time = new Date()
         if (timeShow != null) {
@@ -50,7 +53,22 @@ const TransactionPage = ({ }) => {
 
     }, [])
 
-
+    const fetchAllCategory = async () => {
+        try {
+            const response = await API.get('category', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
+            if (response) {
+                setListCategory(response.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const CustomDatePicker = forwardRef(
         ({ value, onClick }, ref) => (
             <button onClick={onClick} ref={ref} className=" btn btn-primary mx-1">{value}</button>
@@ -193,7 +211,20 @@ const TransactionPage = ({ }) => {
             return []
         }
     }
-
+    const showTransactionDetail = (transaction) => {
+        setSelectTransaction(transaction)
+        console.log('show transaction: ', transaction)
+    }
+    const onUpdateTransaction = (transaction) => {
+        const trans = [...transactions]
+        for (let i in trans) {
+            if (trans[i].id == transaction.id) {
+                transaction[i] = transaction
+                break
+            }
+        }
+        setTransactions(trans)
+    }
     return (
         <>
             <div className="page-heading">
@@ -256,7 +287,7 @@ const TransactionPage = ({ }) => {
                                         {timeTab == 2 ? (<h4 className="card-title">Yearly summary</h4>) : (<></>)}
                                     </div>
                                     <div className="card-content">
-                                        {timeTab == 0 ? (<DailyTransactionTable active={timeTab == 0} transactions={transactions} />) : (<></>)}
+                                        {timeTab == 0 ? (<DailyTransactionTable active={timeTab == 0} transactions={transactions} showDetailTransaction={showTransactionDetail} />) : (<></>)}
                                         {timeTab == 1 ? (<MonthlyTransactionPage active={timeTab == 1} transactions={transactions} selectDate={startDate} />) : (<></>)}
                                         {timeTab == 2 ? (<YearlyTransactionPage active={timeTab == 2} transactions={transactions} selectDate={startDate} />) : (<></>)}
                                     </div>
@@ -298,7 +329,9 @@ const TransactionPage = ({ }) => {
 
                 </section>
             </div>
-            <CreateTransaction onAddTransaction={onAddTransaction} />
+
+            <CreateTransaction onAddTransaction={onAddTransaction} allCategory={listCategory} />
+            <TransactionDetail transaction={selectTransaction} allCategory={listCategory} onUpdateTransaction={onUpdateTransaction} />
         </>
     )
 }

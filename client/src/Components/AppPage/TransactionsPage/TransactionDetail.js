@@ -1,30 +1,63 @@
-import { useState, useEffect, forwardRef } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons'
-import API from '../../../Utils/API'
+import { useState, useEffect } from 'react'
+import { Modal, Button } from 'react-bootstrap'
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const CreateTransaction = ({ onAddTransaction, allCategory }) => {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons'
+
+import API from '../../../Utils/API'
+
+const TransactionDetail = ({ transaction, allCategory, onUpdateTransaction }) => {
+    console.log(transaction != null)
     const [transactionType, setTransactionType] = useState(1)
     const [note, setNote] = useState('')
     const [money, setMoney] = useState(0)
     const [category, setCategory] = useState(0)
     const [method, setMethod] = useState(1)
     const [detail, setDetail] = useState('')
-    const [attachment, setAttachment] = useState(null)
+    const [attachment, setAttachment] = useState()
     const [date, setDate] = useState(new Date())
+
+    useEffect(() => {
+        if (transaction == null) { return }
+        setTransactionType(transaction.expense_type_id)
+        setNote(transaction.note)
+        setMoney(transaction.money_amount)
+        setMethod(transaction.method)
+        setDetail(transaction.detail)
+        setDate(new Date(transaction.date_created))
+
+        const categories = getListCategoryByExpenseType(allCategory, transaction.expense_type_id)
+        for (let i in categories) {
+            if (categories[i].id == transaction.category_id) {
+                setCategory(i)
+                break;
+            }
+        }
+    }, [transaction])
+
 
     const onSetTransactionType = (type) => {
         setTransactionType(type)
         setCategory(0)
     }
+    const onChangeMethod = (e, method) => {
+        e.preventDefault()
+        setCategory(0)
+        setMethod(method)
+    }
+    const getListCategoryByExpenseType = (categories, expense_type_id) => {
+        if (categories == null || categories.length == 0) { return [] }
+        return categories.filter(cat => cat.expense_type_id == expense_type_id)
+    }
     const getGetListCategoryToShow = (categories) => {
         if (categories == null || categories.length == 0) { return [] }
         return categories.filter(cat => cat.expense_type_id == transactionType)
     }
-    const onSubmitTransaction = async (e) => {
+
+    const onSubmitChange = async (e) => {
         e.preventDefault()
         var selectedCategory = getGetListCategoryToShow(allCategory)[category]
         try {
@@ -37,7 +70,7 @@ const CreateTransaction = ({ onAddTransaction, allCategory }) => {
                 method: method,
                 date_created: Math.floor(new Date(date) / 1000)
             }
-            const response = await API.post('/money_expense', data, {
+            const response = await API.put(`/money_expense/${transaction.id}`, data, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem('accessToken')}`
                 }
@@ -45,34 +78,27 @@ const CreateTransaction = ({ onAddTransaction, allCategory }) => {
                 console.log('err: ', err)
             })
             if (response) {
-                console.log(response)
-                onAddTransaction({
-                    ...response.data,
-                    category_name: selectedCategory.category_name,
-                    type_name: transactionType == 1 ? "Income" : (transactionType == 2 ? "Expense" : "Transfer"),
-                    method_name: method == 1 ? "Cash" : (method == 2 ? "Account" : "Card")
-                })
+                transaction.expense_type_id = data.expense_type_id
+                transaction.category_id = data.category_id
+                transaction.money_amount = data.money_amount
+                transaction.note = data.note
+                transaction.detail = data.detail
+                transaction.method = data.method
+                transaction.date_created = data.date_created
+                onUpdateTransaction(transaction)
             }
         } catch (error) {
-
+            console.log(error)
         }
+    }
 
-    }
-    const onChangeMethod = (e, method) => {
-        e.preventDefault()
-        setCategory(0)
-        setMethod(method)
-    }
     return (
         <>
-            <button className="rounded btn btn-primary fixed-button" data-bs-toggle="modal" data-bs-target="#createTransactionModal">
-                <FontAwesomeIcon icon={faPlus} size='1x' />
-            </button>
-            <div className="modal fade" id="createTransactionModal" tabIndex="-1" aria-labelledby="createTransactionModalTitle" style={{ display: 'none' }} aria-hidden="true">
+            <div className="modal fade" id="detailTransactionModal" tabIndex="-1" aria-labelledby="detailTransactionModalTitle" style={{ display: 'none' }} aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="createTransactionModalTitle">Create New Transaction</h5>
+                            <h5 className="modal-title" id="detailTransactionModalTitle">Transaction Detail</h5>
                             <button type="button" className="close" data-bs-dismiss="modal" aria-label="Close">
                                 <i data-feather="x"></i>
                             </button>
@@ -152,7 +178,7 @@ const CreateTransaction = ({ onAddTransaction, allCategory }) => {
                                 <FontAwesomeIcon className="d-block d-sm-none" icon={faTimes} size='xs' />
                                 <span className="d-none d-sm-block">Cancel</span>
                             </button>
-                            <button onClick={e => onSubmitTransaction(e)} type="button" className="btn btn-primary ml-1" data-bs-dismiss="modal">
+                            <button onClick={(e) => { onSubmitChange(e) }} type="button" className="btn btn-primary ml-1" data-bs-dismiss="modal">
                                 <FontAwesomeIcon className="d-block d-sm-none" icon={faCheck} size='xs' />
                                 <span className="d-none d-sm-block">Submit</span>
                             </button>
@@ -164,4 +190,4 @@ const CreateTransaction = ({ onAddTransaction, allCategory }) => {
     )
 }
 
-export default CreateTransaction
+export default TransactionDetail
