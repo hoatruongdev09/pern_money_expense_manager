@@ -3,7 +3,8 @@ import { Link, useRouteMatch } from 'react-router-dom'
 const SideBar = ({ activeSideBar, onActiveSideBar }) => {
     let pathname = window.location.pathname
     let activeTransaction = pathname.match('/dashboard/transactions')
-    let activeDashboard = (pathname.match('/dashboard') || pathname.match('/dashboard/')) && !activeTransaction
+    let activeCategory = pathname.match('/dashboard/category')
+    let activeDashboard = (pathname.match('/dashboard') || pathname.match('/dashboard/')) && (!activeTransaction && !activeCategory)
     return (
         <div id="sidebar" className={activeSideBar ? "active" : ""}>
             <div className="sidebar-wrapper active">
@@ -32,6 +33,12 @@ const SideBar = ({ activeSideBar, onActiveSideBar }) => {
                             <Link to={`/dashboard/transactions`} className='sidebar-link'>
                                 <i className="bi bi-cash-stack"></i>
                                 <span>Transactions</span>
+                            </Link>
+                        </li>
+                        <li className={`sidebar-item ${activeCategory ? 'active' : ''}`}>
+                            <Link to={`/dashboard/category`} className='sidebar-link'>
+                                <i className="bi bi-cash-stack"></i>
+                                <span>Categories</span>
                             </Link>
                         </li>
 

@@ -8,7 +8,7 @@ const categoryProvider = require('../provider/category')
 
 Router.get('/', lowLevelAuthorization, async (req, res) => {
     try {
-        res.json(await categoryProvider.listCategories(!req.user, req.user.is_admin, req.user.user_id))
+        res.json(await categoryProvider.listCategories(req.user != null, req.user.is_admin, req.user.user_id))
     } catch (err) {
         console.log(err)
         error.internalError(res, err.message)
@@ -40,12 +40,13 @@ Router.delete('/:id', authorization, async (req, res) => {
 Router.put('/:id', authorization, async (req, res) => {
     try {
         const id = req.params.id
-        const { category_name, user_category, user_id } = req.body
+        const { category_name, user_category, expense_type_id } = req.body
         const is_admin = req.user.is_admin
 
-        return res.json(await categoryProvider.updateCategory(is_admin, req.user.user_id, id, category_name, user_category))
+        return res.json(await categoryProvider.updateCategory(is_admin, req.user.user_id, id, category_name, expense_type_id, user_category))
 
     } catch (err) {
+        console.log(err)
         error.internalError(res, err.message)
     }
 })

@@ -1,8 +1,10 @@
 const db = require('../db')
 
 const listCategories = async (isAuthorized, isAdmin, userID) => {
+    console.log(isAuthorized, " ", isAdmin, " ", userID)
     try {
         if (!isAuthorized) {
+
             const categories = await db.query(
                 "SELECT * FROM category WHERE user_category=FALSE"
             );
@@ -104,7 +106,7 @@ const updateCategory = async (is_admin, user_id, id, category_name, expense_type
             return updatedCategory.rowCount;
         }
         const updatedCategory = await db.query(
-            "UPDATE category SET category_name=$1,expense_type_id=$2, WHERE id=$3 AND user_id=$4",
+            "UPDATE category SET category_name=$1,expense_type_id=$2 WHERE id=$3 AND user_id=$4",
             [category_name, expense_type_id, id, user_id]
         );
         return updatedCategory.rowCount;

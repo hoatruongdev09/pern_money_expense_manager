@@ -6,7 +6,7 @@ import Topbar from '../../Components/AppPage/TopBar'
 import Sidebar from '../../Components/AppPage/SideBar'
 import Dashboard from './Dashboard'
 import Transaction from './TransactionPage'
-import CreateTransaction from '../../Components/AppPage/TransactionsPage/CreateTransaction'
+import CategoryPage from './CategoryPage'
 
 import API from '../../Utils/API'
 import './App.css'
@@ -63,8 +63,11 @@ const App = () => {
                         <Route path={`${path}/dashboard`} >
                             <Dashboard />
                         </Route>
-                        <Route path={`${path}/transactions`}  >
+                        <Route path={`${path}/transactions`}>
                             <Transaction />
+                        </Route>
+                        <Route path={`${path}/category`}>
+                            <CategoryPage />
                         </Route>
                     </Switch>
                 </div>

@@ -1,5 +1,5 @@
-import { useLocation } from 'react-router-dom'
-
+import { useLocation, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useState, forwardRef, useEffect } from 'react'
 import DailyTransactionTable from '../../Components/AppPage/TransactionsPage/DailyTransactionTable'
 import MonthlyTransactionPage from '../../Components/AppPage/TransactionsPage/MonthlyTransactionPage'
@@ -22,6 +22,7 @@ const TransactionPage = ({ }) => {
     const [selectTransaction, setSelectTransaction] = useState(null)
 
     let query = new URLSearchParams(useLocation().search)
+    // const history = useHistory()
 
     useEffect(async () => {
         await fetchAllCategory()
@@ -247,7 +248,7 @@ const TransactionPage = ({ }) => {
                         <div className="col-12 col-md-4 order-md-2 order-first">
                             <nav aria-label="breadcrumb" className="breadcrumb-header float-start float-lg-end">
                                 <ol className="breadcrumb">
-                                    <li className="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li className="breadcrumb-item"><Link to="/dashboard">Dashboard</Link></li>
                                     <li className="breadcrumb-item active" aria-current="page">Transactions</li>
                                 </ol>
                             </nav>
