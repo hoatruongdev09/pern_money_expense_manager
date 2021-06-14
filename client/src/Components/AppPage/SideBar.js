@@ -11,7 +11,7 @@ const SideBar = ({ activeSideBar, onActiveSideBar }) => {
                 <div className="sidebar-header">
                     <div className="d-flex justify-content-between">
                         <div className="logo">
-                            <a href="index.html"><img src="/assets/images/logo/logo.png" alt="Logo" srcSet="" /></a>
+                            <Link to='/dashboard/overview'><img src="/assets/images/logo/logo.png" alt="Logo" srcSet="" /></Link>
                         </div>
                         <div className="toggler">
                             <a role='button' onClick={e => onActiveSideBar(e)} className="sidebar-hide d-xl-none d-block"><i className="bi bi-x bi-middle"></i></a>
@@ -24,9 +24,9 @@ const SideBar = ({ activeSideBar, onActiveSideBar }) => {
                         <li className="sidebar-title">Menu</li>
 
                         <li className={`sidebar-item ${activeDashboard ? 'active' : ''}`}>
-                            <Link to={`/dashboard`} className='sidebar-link'>
+                            <Link to={`/dashboard/overview`} className='sidebar-link'>
                                 <i className="bi bi-grid-fill"></i>
-                                <span>Dashboard</span>
+                                <span>Overview</span>
                             </Link>
                         </li>
                         <li className={`sidebar-item ${activeTransaction ? 'active' : ''}`}>

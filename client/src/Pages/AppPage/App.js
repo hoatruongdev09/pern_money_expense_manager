@@ -1,4 +1,4 @@
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom"
+import { Route, Switch, useHistory, useRouteMatch, Redirect } from "react-router-dom"
 import { useState, useEffect } from 'react'
 
 
@@ -58,9 +58,10 @@ const App = () => {
                 <div id="main-content">
                     <Switch>
                         <Route exact path={`${path}/`}  >
-                            <Dashboard />
+                            {/* <Dashboard /> */}
+                            <Redirect to={`${path}/overview`} />
                         </Route>
-                        <Route path={`${path}/dashboard`} >
+                        <Route path={`${path}/overview`} >
                             <Dashboard />
                         </Route>
                         <Route path={`${path}/transactions`}>

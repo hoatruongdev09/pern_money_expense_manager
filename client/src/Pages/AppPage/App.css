@@ -28,3 +28,7 @@
   overflow: hidden;
   word-wrap: break-word;
 }
+.chart-container {
+  position: relative;
+  margin: auto;
+}
