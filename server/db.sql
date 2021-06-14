@@ -26,7 +26,7 @@ CREATE TABLE expense_type(
     type_name VARCHAR(50)
 )
 CREATE TABLE money_expense (
-    id integer NOT NULL DEFAULT nextval('money_expense_id_seq'::regclass),
+    id SERIAL PRIMARY KEY NOT NULL,
     expense_type_id integer NOT NULL,
     user_id uuid NOT NULL,
     category_id integer NOT NULL,
@@ -35,13 +35,12 @@ CREATE TABLE money_expense (
     detail character varying(1000) COLLATE pg_catalog."default",
     date_created timestamp without time zone,
     method integer,
-    CONSTRAINT money_expense_pkey PRIMARY KEY (id, user_id)
 )
 
 CREATE TABLE public.expense_method
 (
     method_name character varying(50) COLLATE pg_catalog."default",
-    id bigint NOT NULL DEFAULT nextval('expense_method_id_seq'::regclass)
+    id SERIAL PRIMARY KEY NOT NULL
 )
 
 -- CREATE VIEW money_expense_detail
