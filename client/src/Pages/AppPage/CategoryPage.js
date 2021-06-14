@@ -42,14 +42,14 @@ const CategoryPage = () => {
     const CreateCategory = ({ category }) => {
         if (!category.user_category) {
             return (
-                <button class="btn btn-primary me-1 mb-1">
+                <button className="btn btn-primary me-1 mb-1">
                     {category.category_name}
                 </button>
             )
         } else {
             return (
                 <button onClick={e => onSelectCategory(e, category)} data-bs-target="#detailCategoryModel" data-bs-toggle="modal" className="btn btn-secondary me-1 mb-1">
-                    {category.category_name} <span class="badge"><FontAwesomeIcon icon={faUser} /></span>
+                    {category.category_name} <span className="badge"><FontAwesomeIcon icon={faUser} /></span>
                 </button>
             )
         }
@@ -116,9 +116,9 @@ const CategoryPage = () => {
                 </div>
                 <section className="section">
                     <div className="row">
-                        <div class="input-group mb-3">
-                            <input type="text" value={searchText} onChange={e => onSearchChange(e)} class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2" />
-                            <button onClick={e => onSearchClick(e)} class="input-group-text btn btn-primary" id="basic-addon2">
+                        <div className="input-group mb-3">
+                            <input type="text" value={searchText} onChange={e => onSearchChange(e)} className="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                            <button onClick={e => onSearchClick(e)} className="input-group-text btn btn-primary" id="basic-addon2">
                                 <FontAwesomeIcon icon={faSearch} />
                             </button>
                         </div>

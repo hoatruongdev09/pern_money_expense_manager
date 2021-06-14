@@ -37,7 +37,7 @@ const SideBar = ({ activeSideBar, onActiveSideBar }) => {
                         </li>
                         <li className={`sidebar-item ${activeCategory ? 'active' : ''}`}>
                             <Link to={`/dashboard/category`} className='sidebar-link'>
-                                <i className="bi bi-cash-stack"></i>
+                                <i className="bi bi-list"></i>
                                 <span>Categories</span>
                             </Link>
                         </li>

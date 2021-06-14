@@ -26,17 +26,17 @@ function CreateCategory({ onCreateCategory }) {
     }
     return (
         <>
-            <div class="modal fade" id="createNewCategory" tabindex="-1" aria-labelledby="createNewCategoryTitle" style={{ display: "none" }} aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="createNewCategoryTitle">Create new category</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <div className="modal fade" id="createNewCategory" tabIndex="-1" aria-labelledby="createNewCategoryTitle" style={{ display: "none" }} aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="createNewCategoryTitle">Create new category</h5>
+                            <button type="button" className="close" data-bs-dismiss="modal" aria-label="Close">
                                 <i data-feather="x"></i>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <div class="form-group">
+                        <div className="modal-body">
+                            <div className="form-group">
                                 <form className="form form-horizontal">
                                     <div className="form-body">
                                         <div className="row">
@@ -44,7 +44,7 @@ function CreateCategory({ onCreateCategory }) {
                                                 <label>Category Name</label>
                                             </div>
                                             <div className="col-md-8 form-group">
-                                                <input value={category} onChange={e => setCategory(e.target.value)} type="text" id="roundText" class="form-control round" placeholder="Category name" />
+                                                <input value={category} onChange={e => setCategory(e.target.value)} type="text" id="roundText" className="form-control round" placeholder="Category name" />
                                             </div>
                                         </div>
                                     </div>
@@ -58,14 +58,14 @@ function CreateCategory({ onCreateCategory }) {
                                 </form>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                <i class="bx bx-x d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Cancel</span>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-light-secondary" data-bs-dismiss="modal">
+                                <i className="bx bx-x d-block d-sm-none"></i>
+                                <span className="d-none d-sm-block">Cancel</span>
                             </button>
-                            <button onClick={e => onCreateNewCategory(e)} type="button" class="btn btn-primary ml-1" data-bs-dismiss="modal">
-                                <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Update</span>
+                            <button onClick={e => onCreateNewCategory(e)} type="button" className="btn btn-primary ml-1" data-bs-dismiss="modal">
+                                <i className="bx bx-check d-block d-sm-none"></i>
+                                <span className="d-none d-sm-block">Update</span>
                             </button>
                         </div>
                     </div>

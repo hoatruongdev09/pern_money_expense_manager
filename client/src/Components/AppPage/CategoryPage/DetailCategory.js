@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import API from '../../../Utils/API'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 
 const DetailCategory = ({ category, onUpdateCategory, onDeleteCategory }) => {
@@ -56,13 +58,13 @@ const DetailCategory = ({ category, onUpdateCategory, onDeleteCategory }) => {
         }
     }
     return (
-        <div class="modal fade" id="detailCategoryModel" tabindex="-1" aria-labelledby="detailCategoryModelTitle" style={{ display: 'none' }} aria-hidden="true">
+        <div class="modal fade" id="detailCategoryModel" tabIndex="-1" aria-labelledby="detailCategoryModelTitle" style={{ display: 'none' }} aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="detailCategoryModelTitle">Category Detail</h5>
                         <button type="button" onClick={e => onSubmitDeleteCategory(e)} class="btn btn-danger" data-bs-dismiss="modal">
-                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <FontAwesomeIcon className="d-block d-sm-none" icon={faTrash} size='xs' />
                             <span class="d-none d-sm-block">Delete</span>
                         </button>
                     </div>

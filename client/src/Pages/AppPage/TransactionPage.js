@@ -226,6 +226,10 @@ const TransactionPage = ({ }) => {
         }
         setTransactions(trans)
     }
+    const onDeleteTransaction = (transaction_id) => {
+        const newTransactions = transactions.filter(trans => trans.id != transaction_id)
+        setTransactions(newTransactions)
+    }
     return (
         <>
             <div className="page-heading">
@@ -332,7 +336,7 @@ const TransactionPage = ({ }) => {
             </div>
 
             <CreateTransaction onAddTransaction={onAddTransaction} allCategory={listCategory} />
-            <TransactionDetail transaction={selectTransaction} allCategory={listCategory} onUpdateTransaction={onUpdateTransaction} />
+            <TransactionDetail transaction={selectTransaction} allCategory={listCategory} onUpdateTransaction={onUpdateTransaction} onDeleteTransaction={onDeleteTransaction} />
         </>
     )
 }

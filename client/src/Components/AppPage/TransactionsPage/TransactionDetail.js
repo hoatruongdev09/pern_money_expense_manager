@@ -5,11 +5,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faTimes, faCheck, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import API from '../../../Utils/API'
 
-const TransactionDetail = ({ transaction, allCategory, onUpdateTransaction }) => {
+const TransactionDetail = ({ transaction, allCategory, onUpdateTransaction, onDeleteTransaction }) => {
     console.log(transaction != null)
     const [transactionType, setTransactionType] = useState(1)
     const [note, setNote] = useState('')
@@ -91,7 +91,23 @@ const TransactionDetail = ({ transaction, allCategory, onUpdateTransaction }) =>
             console.log(error)
         }
     }
-
+    const onSubmitDeleteTransaction = async (e) => {
+        e.preventDefault()
+        try {
+            const response = await API.delete(`/money_expense/${transaction.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+            if (response) {
+                onDeleteTransaction(transaction.id)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <>
             <div className="modal fade" id="detailTransactionModal" tabIndex="-1" aria-labelledby="detailTransactionModalTitle" style={{ display: 'none' }} aria-hidden="true">
@@ -99,8 +115,9 @@ const TransactionDetail = ({ transaction, allCategory, onUpdateTransaction }) =>
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="detailTransactionModalTitle">Transaction Detail</h5>
-                            <button type="button" className="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i data-feather="x"></i>
+                            <button onClick={e => onSubmitDeleteTransaction(e)} type="button" className="btn btn-danger" data-bs-dismiss="modal">
+                                <FontAwesomeIcon className="d-block d-sm-none" icon={faTrash} size='xs' />
+                                <span className="d-none d-sm-block">Delete</span>
                             </button>
                         </div>
                         <div className="modal-body">
