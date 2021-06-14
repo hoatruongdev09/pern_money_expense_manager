@@ -28,7 +28,7 @@ function StatisticsChart() {
     }
     return (
         <>
-            <div class="col-sm-12 col-md-4 col-lg-4">
+            <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                 <div class="card">
                     <div className="card-header pb-1">
                         <h6 className="float-start">Statistics</h6>
