@@ -1,0 +1,3 @@
+user_id,user_name,user_email,user_phone,user_address,user_password,is_admin,activated,trial_expired
+befd48a2-a2f0-46bb-b8a0-579a996f6a24,admin,admin@money.com,0989212164,123 and,$2b$10$izWV2.XpdtwlWykmcp4D9uKnflTQxOtDVF2mqZcjD9.a37r.MaguK,t,t,
+ebcd0006-c97a-464b-954d-93495b8cc2aa,,hoatruongdev09@gmail.com,,,$2b$10$vE1rbHkNQ7A67QbdTaYI0uE15.PZHQxXzxlZ5C5qlBfDdq9RS9Ra.,f,f,00:00:00

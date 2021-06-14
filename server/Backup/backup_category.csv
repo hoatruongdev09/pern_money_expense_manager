@@ -1,0 +1,24 @@
+id,category_name,user_category,user_id,expense_type_id
+1,Food,f,,2
+2,Gift,f,,2
+3,Transportation,f,,2
+4,Self-development,f,,2
+7,Social Life,f,,2
+8,Culture,f,,2
+9,Household,f,,2
+10,Apparel,f,,2
+11,Beauty,f,,2
+12,Health,f,,2
+13,Education,f,,2
+16,user category 2,t,82bfc24e-2882-4bd9-90af-1417914a7768,2
+17,user category 4,t,123e2f90-5e28-4fb1-9f9c-aec7a4793b9f,2
+14,Other,f,,4
+18,Allowance,f,,1
+19,Salary,f,,1
+20,Petty cash,f,,1
+21,Bonus,f,,1
+22,Cash,f,,3
+23,Accounts,f,,3
+24,Card,f,,3
+28,test,t,ebcd0006-c97a-464b-954d-93495b8cc2aa,1
+29,Hospital,t,ebcd0006-c97a-464b-954d-93495b8cc2aa,2
