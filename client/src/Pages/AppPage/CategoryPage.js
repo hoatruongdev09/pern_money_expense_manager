@@ -90,7 +90,11 @@ const CategoryPage = () => {
         console.log(newCategory)
         setCategories(newCategory)
     }
+    const onDeleteCategory = (category_id) => {
+        const newCategory = categories.filter(cat => cat.id != category_id)
+        setCategories(newCategory)
 
+    }
     return (
         <>
             <div className="page-heading">
@@ -150,7 +154,7 @@ const CategoryPage = () => {
                 </section>
             </div>
             <CreateNewCategory onCreateCategory={onCreateCategory} selectedCategory={selectedCategory} onUpdateCategory={onUpdateCategory} />
-            <DetailCategory category={selectedCategory} onUpdateCategory={onUpdateCategory} />
+            <DetailCategory category={selectedCategory} onUpdateCategory={onUpdateCategory} onDeleteCategory={onDeleteCategory} />
         </>
     )
 }

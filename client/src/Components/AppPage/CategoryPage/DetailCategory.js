@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import API from '../../../Utils/API'
 
 
-const DetailCategory = ({ category, onUpdateCategory }) => {
+const DetailCategory = ({ category, onUpdateCategory, onDeleteCategory }) => {
     const [categoryName, setCategoryName] = useState('')
     const [categoryType, setCategoryType] = useState(1)
 
@@ -38,12 +38,33 @@ const DetailCategory = ({ category, onUpdateCategory }) => {
             console.log(error)
         }
     }
+    const onSubmitDeleteCategory = async (e) => {
+        e.preventDefault()
+        try {
+            const response = await API.delete(`/category/${category.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+            if (response) {
+                onDeleteCategory(category.id)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div class="modal fade" id="detailCategoryModel" tabindex="-1" aria-labelledby="detailCategoryModelTitle" style={{ display: 'none' }} aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="detailCategoryModelTitle">Category Detail</h5>
+                        <button type="button" onClick={e => onSubmitDeleteCategory(e)} class="btn btn-danger" data-bs-dismiss="modal">
+                            <i class="bx bx-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Delete</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -73,6 +94,7 @@ const DetailCategory = ({ category, onUpdateCategory }) => {
                             <i class="bx bx-x d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">Cancel</span>
                         </button>
+
                         <button type="button" onClick={e => onSubmitUpdateCategory(e)} class={`btn ${(categoryName != (category != null ? category.category_name : '') || categoryType != (category != null ? category.expense_type_id : 1)) ? '' : 'disabled'} btn-primary ml-1`} data-bs-dismiss="modal">
                             <i class="bx bx-check d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">Update</span>
