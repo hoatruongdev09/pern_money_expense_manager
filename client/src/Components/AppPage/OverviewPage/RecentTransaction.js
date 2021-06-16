@@ -26,7 +26,7 @@ function RecentTransaction({ transactions }) {
                                             index < 5 ? (
                                                 <tr>
                                                     <td class="text-bold-500 text-start">{record.note}</td>
-                                                    <td className="text-end">{formatMoney(record.money_amount)}</td>
+                                                    <td className={`text-end ${record.expense_type_id === 1 ? 'text-info' : 'text-danger'}`}>{formatMoney(record.money_amount)}</td>
                                                 </tr>) : <></>
                                         ))
                                     }
