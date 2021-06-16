@@ -154,7 +154,7 @@ const Dashboard = ({ }) => {
                         <div className="row">
                             <StatisticsChart chartName='Statistics' data={createStatisticData(transactions)} />
                             <StatisticsChart chartName='Most income' data={createIncomeStructure(transactions)} />
-                            <StatisticsChart chartName='Most expense' data={createExpenseStructure(transactions)} />
+                            <StatisticsChart chartName='Most Spending' data={createExpenseStructure(transactions)} />
                             <RecentTransactions transactions={transactions} />
                         </div>
                     </div>

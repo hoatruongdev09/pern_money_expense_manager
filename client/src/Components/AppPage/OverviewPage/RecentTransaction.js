@@ -13,7 +13,7 @@ function RecentTransaction({ transactions }) {
             <div class="card">
                 <div className="card-header pb-1">
                     <h6 className="float-start">Recent transactions</h6>
-                    <button className="btn float-end py-0 px-0"><FontAwesomeIcon icon={faPlus} size='xs' /></button>
+                    <a href={`/dashboard/transactions?tab=monthly&time=${new Date().getMonth() + 1}-${new Date().getDate()}-${new Date().getFullYear()}`} className="btn float-end py-0 px-0"><FontAwesomeIcon icon={faPlus} size='xs' /></a>
 
                 </div>
                 <div class="card-content">
