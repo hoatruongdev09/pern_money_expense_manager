@@ -1,6 +1,6 @@
 import { useLocation, useHistory } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { useState, forwardRef, useEffect } from 'react'
+import { useState, forwardRef, useEffect, useCallback } from 'react'
 import DailyTransactionTable from '../../Components/AppPage/TransactionsPage/DailyTransactionTable'
 import MonthlyTransactionPage from '../../Components/AppPage/TransactionsPage/MonthlyTransactionPage'
 import YearlyTransactionPage from '../../Components/AppPage/TransactionsPage/YearlyTransactionPage'
@@ -24,8 +24,8 @@ const TransactionPage = ({ }) => {
     let query = new URLSearchParams(useLocation().search)
     // const history = useHistory()
 
-    useEffect(async () => {
-        await fetchAllCategory()
+    useEffect(() => {
+        fetchAllCategory()
         const tabShow = query.get('tab')
         const timeShow = query.get('time')
         let time = new Date()
@@ -36,24 +36,23 @@ const TransactionPage = ({ }) => {
         switch (tabShow) {
             case 'daily':
                 setTimeTab(0)
-                await fetchDateTransactionByTime(time)
+                fetchDateTransactionByTime(time)
                 break
             case 'monthly':
                 setTimeTab(1)
-                await fetchMonthTransactionByTime(time)
+                fetchMonthTransactionByTime(time)
                 break
             case 'yearly':
                 setTimeTab(2)
-                await fetchYearTransactionByTime(time)
+                fetchYearTransactionByTime(time)
                 break
             default:
                 setTimeTab(0)
-                await fetchDateTransactionByTime(time)
+                fetchDateTransactionByTime(time)
                 break
         }
 
     }, [])
-
     const fetchAllCategory = async () => {
         try {
             const response = await API.get('category', {
@@ -134,6 +133,7 @@ const TransactionPage = ({ }) => {
             case 2:
                 value = new Date(startDate).getFullYear()
                 break
+            default: value = new Date(startDate).getDate()
         }
         value += direction
         let time = new Date(startDate)
@@ -147,6 +147,7 @@ const TransactionPage = ({ }) => {
             case 2:
                 time.setFullYear(value)
                 break;
+            default: time.setDate(value)
         }
         await onSetSelectDate(time)
 

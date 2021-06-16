@@ -9,11 +9,14 @@ import RegisterVerifyAccountPage from './RegisterVerifyAccountPage'
 import API from '../../Utils/API'
 
 const App = () => {
-    const { path, url } = useRouteMatch()
+    const { path } = useRouteMatch()
     const history = useHistory()
-    useEffect(async () => {
+    useEffect(() => {
+        checkAuthenticate()
+    }, [])
+    const checkAuthenticate = async () => {
         const token = localStorage.getItem('accessToken')
-        if (token == null || token == '') {
+        if (token == null || token === '') {
             return
         }
         try {
@@ -30,8 +33,7 @@ const App = () => {
         } catch (err) {
             console.error(err)
         }
-    }, [])
-
+    }
     return (
         <>
             <Switch>

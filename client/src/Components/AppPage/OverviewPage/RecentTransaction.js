@@ -1,6 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-function RecentTransaction() {
+import formatMoney from '../../../Utils/formatMoney'
+
+function RecentTransaction({ transactions }) {
+
+    console.log('recent transaction: ', transactions)
+    const sortedTransaction = (transactions) => {
+        return transactions.sort((a, b) => new Date(b.date_created) - new Date(a.date_created))
+    }
     return (
         <div class="col-sm-12 col-md-4 col-lg-4">
             <div class="card">
@@ -14,26 +21,15 @@ function RecentTransaction() {
                         <div class="table-responsive">
                             <table class="table table-borderless mb-0">
                                 <tbody>
-                                    <tr>
-                                        <td class="text-bold-500 text-start">Michael Right</td>
-                                        <td className="text-end">$15/hr</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-bold-500 text-start">Michael Right</td>
-                                        <td className="text-end">$15/hr</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-bold-500 text-start">Michael Right</td>
-                                        <td className="text-end">$15/hr</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-bold-500 text-start">Michael Right</td>
-                                        <td className="text-end">$15/hr</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-bold-500 text-start">Michael Right</td>
-                                        <td className="text-end">$15/hr</td>
-                                    </tr>
+                                    {
+                                        sortedTransaction(transactions).map((record, index) => (
+                                            index < 5 ? (
+                                                <tr>
+                                                    <td class="text-bold-500 text-start">{record.note}</td>
+                                                    <td className="text-end">{formatMoney(record.money_amount)}</td>
+                                                </tr>) : <></>
+                                        ))
+                                    }
                                 </tbody>
                             </table>
                         </div>
