@@ -1,18 +1,31 @@
 import RecentTransactions from '../../Components/AppPage/OverviewPage/RecentTransaction'
 import StatisticsChart from '../../Components/AppPage/OverviewPage/ModifiedChart'
+import InterpolateChart from '../../Components/AppPage/OverviewPage/InterpolateChart'
 import { useEffect, useState } from "react"
 import API from '../../Utils/API'
 
 
 const Dashboard = ({ }) => {
     const [transactions, setTransactions] = useState([])
+    const [yearTransactions, setYearTransactions] = useState([])
     useEffect(() => {
         fetchMonthTransactionByTime(new Date())
+        fetchYearTransactionByTime(new Date())
     }, [])
     const fetchMonthTransactionByTime = async (time) => {
         const { fromDate, toDate } = getStartAndEndMonth(time)
         const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
         setTransactions(data)
+    }
+    const fetchYearTransactionByTime = async (time) => {
+        const { fromDate, toDate } = getStartAndEndYear(time)
+        const data = await fetchTransactionByTime(Math.floor(fromDate / 1000), Math.floor(toDate / 1000))
+        setYearTransactions(data)
+    }
+    const getStartAndEndYear = (currentTime) => {
+        const fromDate = new Date(currentTime.getFullYear(), 1, 1)
+        const toDate = new Date(currentTime.getFullYear(), 12, 31)
+        return { fromDate, toDate }
     }
     const getStartAndEndMonth = (currentTime) => {
         const fromDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), 1)
@@ -142,6 +155,76 @@ const Dashboard = ({ }) => {
         }
         return data
     }
+    const createData = (transactions) => {
+        const currentDate = new Date()
+        const endDateOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+
+        const DATA_COUNT = endDateOfMonth.getDate();
+        const labels = [];
+        for (let i = 1; i <= DATA_COUNT; ++i) {
+            labels.push(i.toString());
+        }
+        const inComeDataMap = new Map()
+        const expenseDataMap = new Map()
+
+        transactions.forEach(record => {
+            if (record.expense_type_id == 1) {
+                let incomeData = inComeDataMap.get(new Date(record.date_created).getMonth())
+                if (incomeData != null) {
+                    incomeData += parseInt(record.money_amount)
+                } else {
+                    inComeDataMap.set(new Date(record.date_created).getMonth(), parseInt(record.money_amount))
+                }
+            }
+            if (record.expense_type_id == 2) {
+                let incomeData = expenseDataMap.get(new Date(record.date_created).getMonth())
+                if (incomeData != null) {
+                    incomeData += parseInt(record.money_amount)
+                } else {
+                    expenseDataMap.set(new Date(record.date_created).getMonth(), parseInt(record.money_amount))
+                }
+            }
+        })
+        let incomeData = []
+        let expenseData = []
+        let balanceData = []
+
+        for (let i = 0; i < 12; i++) {
+            const monthIncome = inComeDataMap.get(i)
+            const monthExpense = expenseDataMap.get(i)
+            incomeData[i] = monthIncome == null ? NaN : monthIncome
+            expenseData[i] = monthExpense == null ? NaN : monthExpense
+
+            const totalIncome = incomeData.reduce((total, next) => total + next == NaN ? 0 : next, 0)
+
+        }
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Income',
+                    data: incomeData,
+                    borderColor: '#00a8ff',
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    tension: 0.4
+                }, {
+                    label: 'Expense',
+                    data: expenseData,
+                    borderColor: '#e84118',
+                    fill: false,
+                    tension: 0.4
+                },
+                // {
+                //     label: 'Linear interpolation (default)',
+                //     data: datapoints,
+                //     borderColor: '#4cd137',
+                //     fill: false
+                // }
+            ]
+        };
+        return data
+    }
     return (
         <>
             <div className="page-heading">
@@ -155,6 +238,7 @@ const Dashboard = ({ }) => {
                             <StatisticsChart chartName='Statistics' data={createStatisticData(transactions)} />
                             <StatisticsChart chartName='Most income' data={createIncomeStructure(transactions)} />
                             <StatisticsChart chartName='Most Spending' data={createExpenseStructure(transactions)} />
+                            <InterpolateChart chartName="Statistics" data={createData(yearTransactions)} />
                             <RecentTransactions transactions={transactions} />
                         </div>
                     </div>
