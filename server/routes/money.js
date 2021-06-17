@@ -1,7 +1,7 @@
 const Router = require("express").Router();
 const error = require("../errors/error");
 const db = require("../db");
-
+const excelJob = require('../utils/excelJob')
 const authorize = require("../middlewares/authorize");
 
 const moneyProvider = require('../provider/money')
@@ -31,6 +31,19 @@ Router.get("/", authorize, async (req, res) => {
         error.internalError(res, err.message);
     }
 });
+Router.get('/excel', authorize, async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query
+        const data = await moneyProvider.listDetailExpense(req.user.is_admin, req.user.user_id, startDate ?? null, endDate ?? null)
+        const workbook = excelJob(data)
+        await workbook.write('data.xlsx', res)
+        console.log('wt')
+        // res.status(200).json({ message: 'ok' })
+    } catch (err) {
+        console.log(err)
+        error.internalError(res, err.message);
+    }
+})
 
 Router.get("/:id", authorize, async (req, res) => {
     try {

@@ -16,23 +16,24 @@ const InterpolateChart = ({ chartName, data }) => {
             x: {
                 display: true,
                 title: {
-                    display: true
+                    display: true,
+                    text: 'Day in month'
                 }
             },
             y: {
                 display: true,
                 title: {
                     display: true,
-                    text: 'Value'
+                    text: 'Money amount'
                 },
-                suggestedMin: -10,
-                suggestedMax: 200
+                suggestedMin: 0,
+                suggestedMax: 2000
             }
         }
     }
     return (
         <>
-            <div class="col-12 col-sm-8 col-md-8 col-lg-8">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
                 <div class="card">
                     <div className="card-header pb-1">
                         <h6 className="float-start">{chartName}</h6>

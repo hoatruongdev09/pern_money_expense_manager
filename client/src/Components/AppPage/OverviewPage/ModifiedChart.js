@@ -4,7 +4,7 @@ function StatisticsChart({ chartName, data }) {
     const displayOption = {
         plugins: {
             legend: {
-                position: 'right',
+                position: 'bottom',
                 labels: {
                     usePointStyle: true,
                     boxWidth: 10,

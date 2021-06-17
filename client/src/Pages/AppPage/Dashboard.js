@@ -4,7 +4,10 @@ import InterpolateChart from '../../Components/AppPage/OverviewPage/InterpolateC
 import { useEffect, useState } from "react"
 import API from '../../Utils/API'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFileExcel } from '@fortawesome/free-solid-svg-icons'
 
+import jsFileDownload from 'js-file-download'
 const Dashboard = ({ }) => {
     const [transactions, setTransactions] = useState([])
     const [yearTransactions, setYearTransactions] = useState([])
@@ -105,7 +108,12 @@ const Dashboard = ({ }) => {
             otherSource += dataMap[i].value
         }
         const data = {
-            labels: [...dataMap.slice(0, 2).map(data => data.name), 'Other'],
+            labels: [...dataMap.slice(0, 2).map(data => {
+                if (data.name.length >= 13) {
+                    return data.name.substring(0, 10) + "..."
+                }
+                return data.name
+            }), 'Other'],
             datasets: [
                 {
                     label: 'Most Income Source',
@@ -189,13 +197,17 @@ const Dashboard = ({ }) => {
         let expenseData = []
         let balanceData = []
 
+        let totalIncome = 0
+        let totalExpense = 0
         for (let i = 0; i < 12; i++) {
             const monthIncome = inComeDataMap.get(i)
             const monthExpense = expenseDataMap.get(i)
-            incomeData[i] = monthIncome == null ? NaN : monthIncome
-            expenseData[i] = monthExpense == null ? NaN : monthExpense
+            totalIncome += monthIncome == null ? 0 : monthIncome
+            totalExpense += monthExpense == null ? 0 : monthExpense
+            incomeData[i] = totalIncome
+            expenseData[i] = totalExpense
+            balanceData[i] = totalIncome - totalExpense
 
-            const totalIncome = incomeData.reduce((total, next) => total + next == NaN ? 0 : next, 0)
 
         }
         const data = {
@@ -204,27 +216,51 @@ const Dashboard = ({ }) => {
                 {
                     label: 'Income',
                     data: incomeData,
-                    borderColor: '#00a8ff',
+                    borderColor: '#0dcaf0',
                     fill: false,
                     cubicInterpolationMode: 'monotone',
                     tension: 0.4
                 }, {
                     label: 'Expense',
                     data: expenseData,
-                    borderColor: '#e84118',
+                    borderColor: '#dc3545',
                     fill: false,
                     tension: 0.4
                 },
-                // {
-                //     label: 'Linear interpolation (default)',
-                //     data: datapoints,
-                //     borderColor: '#4cd137',
-                //     fill: false
-                // }
+                {
+                    label: 'Balance',
+                    data: balanceData,
+                    borderColor: '#6c757d',
+                    fill: false
+                }
             ]
         };
         return data
     }
+
+    const generateReport = async (e) => {
+        e.preventDefault()
+        const { fromDate, toDate } = getStartAndEndMonth(new Date())
+        const from = Math.floor(new Date(fromDate) / 1000)
+        const to = Math.floor(new Date(toDate) / 1000)
+        try {
+
+            const response = await API.get(`/money_expense/excel?startDate=${from}&endDate=${to}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                },
+                responseType: 'blob'
+            }).catch(err => {
+
+            })
+            if (response && response.status === 200) {
+                jsFileDownload(response.data, 'report.xlsx')
+            }
+        } catch (error) {
+
+        }
+    }
+
     return (
         <>
             <div className="page-heading">
@@ -236,14 +272,24 @@ const Dashboard = ({ }) => {
                     <div className="col-sm-12 col-md-9">
                         <div className="row">
                             <StatisticsChart chartName='Statistics' data={createStatisticData(transactions)} />
-                            <StatisticsChart chartName='Most income' data={createIncomeStructure(transactions)} />
-                            <StatisticsChart chartName='Most Spending' data={createExpenseStructure(transactions)} />
-                            <InterpolateChart chartName="Statistics" data={createData(yearTransactions)} />
+                            <StatisticsChart chartName='Earned in this month' data={createIncomeStructure(transactions)} />
+                            <StatisticsChart chartName='Spend in this month' data={createExpenseStructure(transactions)} />
+                            <InterpolateChart chartName="Earned, spend & balance in this month" data={createData(yearTransactions)} />
                             <RecentTransactions transactions={transactions} />
                         </div>
                     </div>
                     <div className="col-sm-12 col-md-3">
+                        <div class="card">
+                            {/* <div className="card-header pb-1">
+                                <h6 className="float-start">Generate Report</h6>
 
+                            </div> */}
+                            <div class="card-content pt-3">
+                                <div className="card-body pt-1">
+                                    <button onClick={e => generateReport(e)} className='btn btn-primary w-100'><FontAwesomeIcon icon={faFileExcel} /> Generate Report</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
