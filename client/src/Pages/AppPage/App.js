@@ -15,15 +15,14 @@ const App = () => {
     const { path, url } = useRouteMatch()
     const [activeSideBar, setActiveSideBar] = useState(true)
     const [authenticated, setAuthenticated] = useState(false)
-    const [activePage, setActivePage] = useState(0)
     const history = useHistory()
-
+    console.log('dashboard')
     const checkAuthenticated = async () => {
         const token = localStorage.getItem('accessToken')
         if (token == null || token === '') {
             history.push(`/auth/login`)
-
         }
+        console.log(token)
         try {
             const response = await API.get('auth/', {
                 headers: {
@@ -33,7 +32,7 @@ const App = () => {
                 setAuthenticated(false)
                 history.push('/auth/login')
             })
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setAuthenticated(true)
             }
         } catch (err) {
@@ -41,41 +40,45 @@ const App = () => {
             history.push('/auth/login')
         }
     }
-    useState(async () => {
-        await checkAuthenticated()
+    useEffect(() => {
+        checkAuthenticated()
         console.log(history.location)
-    }, [history.location])
+    }, [])
 
     const onActiveSideBar = (e) => {
         e.preventDefault()
         setActiveSideBar(!activeSideBar)
     }
-    return (
-        <div style={{ backgroundColor: '#f1f2f6', minHeight: '100%' }}>
-            <Sidebar activeSideBar={activeSideBar} onActiveSideBar={onActiveSideBar} />
-            <div id="main" style={{ minHeight: '100%' }}>
-                <Topbar onActiveSideBar={onActiveSideBar} />
-                <div id="main-content">
-                    <Switch>
-                        <Route exact path={`${path}/`}  >
-                            {/* <Dashboard /> */}
-                            <Redirect to={`${path}/overview`} />
-                        </Route>
-                        <Route path={`${path}/overview`} >
-                            <Dashboard />
-                        </Route>
-                        <Route path={`${path}/transactions`}>
-                            <Transaction />
-                        </Route>
-                        <Route path={`${path}/category`}>
-                            <CategoryPage />
-                        </Route>
-                    </Switch>
+    if (authenticated) {
+        return (
+            <div style={{ backgroundColor: '#f1f2f6', minHeight: '100%' }}>
+                <Sidebar activeSideBar={activeSideBar} onActiveSideBar={onActiveSideBar} />
+                <div id="main" style={{ minHeight: '100%' }}>
+                    <Topbar onActiveSideBar={onActiveSideBar} />
+                    <div id="main-content">
+                        <Switch>
+                            <Route exact path={`${path}/`}  >
+                                {/* <Dashboard /> */}
+                                <Redirect to={`/dashboard/overview`} />
+                            </Route>
+                            <Route path={`${path}/overview`} >
+                                <Dashboard />
+                            </Route>
+                            <Route path={`${path}/transactions`}>
+                                <Transaction />
+                            </Route>
+                            <Route path={`${path}/category`}>
+                                <CategoryPage />
+                            </Route>
+                        </Switch>
+                    </div>
                 </div>
-            </div>
 
-        </div>
-    );
+            </div>
+        );
+    } else {
+        return (<div>waiting</div>)
+    }
 };
 
 export default App;
