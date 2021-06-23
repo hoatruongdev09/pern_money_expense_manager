@@ -1,19 +1,49 @@
+import React, { Suspense, useState, useEffect } from 'react'
 import { Route, Switch, useHistory, useRouteMatch, Redirect } from "react-router-dom"
-import { useState, useEffect } from 'react'
-
 
 import Topbar from '../../Components/AppPage/TopBar'
 import Sidebar from '../../Components/AppPage/SideBar'
-import Dashboard from './Dashboard'
-import Transaction from './TransactionPage'
-import CategoryPage from './CategoryPage'
+// import Dashboard from './Dashboard'
+// import Transaction from './TransactionPage'
+// import CategoryPage from './CategoryPage'
+// import UserPage from './UserPage'
 
 import API from '../../Utils/API'
 import './App.css'
 
+// const Topbar = React.lazy(() => import('../../Components/AppPage/TopBar'))
+// const Sidebar = React.lazy(() => import('../../Components/AppPage/SideBar'))
+const Dashboard = React.lazy(() => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(import('./Dashboard'))
+        }, 300);
+    })
+})
+const Transaction = React.lazy(() => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(import('./TransactionPage'))
+        }, 300);
+    })
+})
+const CategoryPage = React.lazy(() => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(import('./CategoryPage'))
+        }, 300);
+    })
+})
+const UserPage = React.lazy(() => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(import('./UserPage'))
+        }, 300);
+    })
+})
 const App = () => {
     const { path, url } = useRouteMatch()
-    const [activeSideBar, setActiveSideBar] = useState(true)
+    // const [activeSideBar, setActiveSideBar] = useState(true)
     const [authenticated, setAuthenticated] = useState(false)
     const [activePage, setActivePage] = useState(0)
     const history = useHistory()
@@ -37,7 +67,9 @@ const App = () => {
                 setAuthenticated(true)
             }
         } catch (err) {
+            // setTimeout(() => {
             setAuthenticated(false)
+            // }, 500)
             history.push('/auth/login')
         }
     }
@@ -48,30 +80,49 @@ const App = () => {
 
     const onActiveSideBar = (e) => {
         e.preventDefault()
-        setActiveSideBar(!activeSideBar)
+        // setActiveSideBar(!activeSideBar)
+    }
+    if (!authenticated) {
+        return (
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        )
+    }
+    const LoadingScreen = () => {
+        return (
+            <button class="btn btn-primary" type="button" disabled="">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </button>
+        )
     }
     return (
         <div style={{ backgroundColor: '#f1f2f6', minHeight: '100%' }}>
-            <Sidebar activeSideBar={activeSideBar} onActiveSideBar={onActiveSideBar} />
+            <Sidebar />
             <div id="main" style={{ minHeight: '100%' }}>
-                <Topbar onActiveSideBar={onActiveSideBar} />
-                <div id="main-content">
-                    <Switch>
-                        <Route exact path={`${path}/`}  >
-                            {/* <Dashboard /> */}
-                            <Redirect to={`${path}/overview`} />
-                        </Route>
-                        <Route path={`${path}/overview`} >
-                            <Dashboard />
-                        </Route>
-                        <Route path={`${path}/transactions`}>
-                            <Transaction />
-                        </Route>
-                        <Route path={`${path}/category`}>
-                            <CategoryPage />
-                        </Route>
-                    </Switch>
-                </div>
+                <Topbar />
+                <Suspense fallback={<LoadingScreen />} >
+                    <div id="main-content">
+                        <Switch>
+                            <Route exact path={`${path}/`} >
+                                <Redirect to={`${path}/overview`} />
+                            </Route>
+                            <Route path={`${path}/overview`} >
+                                <Dashboard />
+                            </Route>
+                            <Route path={`${path}/transactions`}>
+                                <Transaction />
+                            </Route>
+                            <Route path={`${path}/category`}>
+                                <CategoryPage />
+                            </Route>
+                            <Route path={`${path}/user`}>
+                                <UserPage />
+                            </Route>
+                        </Switch>
+                    </div>
+                </Suspense>
             </div>
 
         </div>

@@ -16,15 +16,19 @@ for (var i = 0; i < sidebarItems.length; i++) {
     })
 }
 
-window.addEventListener('DOMContentLoaded', (event) => {
-    var w = window.innerWidth;
-    if (w < 1200) {
-        let sidebar = document.getElementById('sidebar')
-        if (sidebar != null && sidebar.classList != null) {
-            sidebar.classList.remove('active');
-        }
-    }
-});
+// window.addEventListener('DOMContentLoaded', (event) => {
+//     var w = window.innerWidth;
+//     let sidebar = document.getElementById('sidebar')
+//     if (w < 1200) {
+//         if (sidebar != null && sidebar.classList != null) {
+//             sidebar.classList.remove('active');
+//         }
+//     } else {
+//         if (sidebar != null && sidebar.classList != null) {
+//             sidebar.classList.add('active');
+//         }
+//     }
+// });
 window.addEventListener('resize', (event) => {
     var w = window.innerWidth;
     if (w < 1200) {
@@ -45,7 +49,33 @@ if (sidebarHide != null) {
         document.getElementById('sidebar').classList.toggle('active');
     })
 }
+window.onload = (e) => {
+    document.getElementById('top-bar-toggle-sidebar').addEventListener('click', (e) => {
+        toggleSideBar()
+    })
+    document.getElementById('side-bar-toggle').addEventListener('click', (e) => {
+        toggleSideBar()
+    })
 
+    checkInitShowSidebar()
+}
+function checkInitShowSidebar() {
+    let width = window.innerWidth
+    let sidebar = document.getElementById('sidebar')
+    if (width < 1200) {
+        sidebar.classList.remove('active')
+    }
+}
+function toggleSideBar() {
+    console.log('toggle side bar')
+    let sidebar = document.getElementById('sidebar')
+    let isActive = sidebar.classList.contains('active')
+    if (isActive) {
+        sidebar.classList.remove('active')
+    } else {
+        sidebar.classList.add('active')
+    }
+}
 
 // Perfect Scrollbar Init
 // if (typeof PerfectScrollbar == 'function') {

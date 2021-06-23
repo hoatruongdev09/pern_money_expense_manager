@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useHistory } from "react-router"
+import { Link } from 'react-router-dom'
 
 import API from '../../Utils/API'
 
@@ -22,23 +23,16 @@ const TopBar = ({ onActiveSideBar }) => {
             return
         }
         try {
-            let response = await API.get('auth/', {
+            const response = await API.get("/user/info/current", {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
             }).catch(err => {
                 console.log(err.response)
             })
-            if (response && response.status == 200) {
-                const userID = response.data.user.user_id
-                response = await API.get(`user/${userID}`).catch(err => {
-                    console.error(err)
-                })
-                if (response && response.status == 200) {
-                    console.log(response.data)
-                    setUserName(splitEmailName(response.data.user_email))
-                    setAdmin(response.data.is_admin)
-                }
+            if (response && response.status === 200) {
+                setUserName(response.data.user_name ? response.data.user_name : 'Anonymous')
+                setAdmin(response.data.is_admin)
             }
         } catch (err) {
             console.error(err)
@@ -49,7 +43,7 @@ const TopBar = ({ onActiveSideBar }) => {
         <header className="mb-3">
             <nav className="navbar navbar-expand navbar-light ">
                 <div className="container-fluid">
-                    <a role="button" onClick={e => onActiveSideBar(e)} className="burger-btn d-block">
+                    <a role="button" id='top-bar-toggle-sidebar'/*onClick={e => onActiveSideBar(e)}*/ className="burger-btn d-block">
                         <i className="bi bi-justify fs-3"></i>
                     </a>
 
@@ -99,12 +93,12 @@ const TopBar = ({ onActiveSideBar }) => {
                                 <li>
                                     <h6 className="dropdown-header">Hello, {userName}</h6>
                                 </li>
-                                <li><a className="dropdown-item" href="#"><i className="icon-mid bi bi-person me-2"></i> My
-                                Profile</a></li>
-                                <li><a className="dropdown-item" href="#"><i className="icon-mid bi bi-gear me-2"></i>
-                                Settings</a></li>
+                                <li><Link className="dropdown-item" to='/dashboard/user'><i className="icon-mid bi bi-person me-2"></i> My
+                                    Profile</Link></li>
+                                {/* <li><a className="dropdown-item" href="#"><i className="icon-mid bi bi-gear me-2"></i>
+                                    Settings</a></li>
                                 <li><a className="dropdown-item" href="#"><i className="icon-mid bi bi-wallet me-2"></i>
-                                Wallet</a></li>
+                                    Wallet</a></li> */}
                                 <li>
                                     <hr className="dropdown-divider" />
                                 </li>

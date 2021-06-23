@@ -1,12 +1,14 @@
 import { useEffect } from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
-const SideBar = ({ activeSideBar, onActiveSideBar }) => {
+const SideBar = () => {
     let pathname = window.location.pathname
     let activeTransaction = pathname.match('/dashboard/transactions')
     let activeCategory = pathname.match('/dashboard/category')
-    let activeDashboard = (pathname.match('/dashboard') || pathname.match('/dashboard/')) && (!activeTransaction && !activeCategory)
+    let activeUser = pathname.match('/dashboard/user')
+    let activeDashboard = (pathname.match('/dashboard') || pathname.match('/dashboard/')) && (!activeTransaction && !activeCategory && !activeUser)
+
     return (
-        <div id="sidebar" className={activeSideBar ? "active" : ""}>
+        <div id="sidebar" className="active" >
             <div className="sidebar-wrapper active">
                 <div className="sidebar-header">
                     <div className="d-flex justify-content-between">
@@ -14,7 +16,7 @@ const SideBar = ({ activeSideBar, onActiveSideBar }) => {
                             <Link to='/dashboard/overview'><img src="/assets/images/logo/logo.png" alt="Logo" srcSet="" /></Link>
                         </div>
                         <div className="toggler">
-                            <a role='button' onClick={e => onActiveSideBar(e)} className="sidebar-hide d-xl-none d-block"><i className="bi bi-x bi-middle"></i></a>
+                            <a role='button' id='side-bar-toggle' className="sidebar-hide d-xl-none d-block"><i className="bi bi-x bi-middle"></i></a>
                         </div>
                     </div>
                 </div>
@@ -39,6 +41,12 @@ const SideBar = ({ activeSideBar, onActiveSideBar }) => {
                             <Link to={`/dashboard/category`} className='sidebar-link'>
                                 <i className="bi bi-list"></i>
                                 <span>Categories</span>
+                            </Link>
+                        </li>
+                        <li className={`sidebar-item ${activeUser ? 'active' : ''}`}>
+                            <Link to={`/dashboard/user`} className='sidebar-link'>
+                                <i className="bi bi-person"></i>
+                                <span>My profile</span>
                             </Link>
                         </li>
 

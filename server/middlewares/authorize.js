@@ -14,6 +14,7 @@ const authorize = async (req, res, next) => {
 
         next()
     } catch (err) {
+        console.log(err)
         error.internalError(res, err.message)
     }
 

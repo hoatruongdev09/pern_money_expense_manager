@@ -167,7 +167,8 @@ const Dashboard = ({ }) => {
         const currentDate = new Date()
         const endDateOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
 
-        const DATA_COUNT = endDateOfMonth.getDate();
+        const currentMonth = currentDate.getMonth() + 1
+        const DATA_COUNT = 12
         const labels = [];
         for (let i = 1; i <= DATA_COUNT; ++i) {
             labels.push(i.toString());
@@ -199,7 +200,7 @@ const Dashboard = ({ }) => {
 
         let totalIncome = 0
         let totalExpense = 0
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < currentMonth; i++) {
             const monthIncome = inComeDataMap.get(i)
             const monthExpense = expenseDataMap.get(i)
             totalIncome += monthIncome == null ? 0 : monthIncome
