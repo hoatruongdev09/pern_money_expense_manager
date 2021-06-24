@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import API from '../../Utils/API'
 import { baseUrl, createRequest } from '../../Utils/requestManager'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 function UserPage() {
     const [username, setUserName] = useState('')
@@ -31,6 +31,9 @@ function UserPage() {
 
     const [alertSuccess, setAlertSuccess] = useState(false)
     const [alertContent, setAlertContent] = useState('')
+
+    const activeInputFile = useRef(null)
+
     useEffect(async () => {
         const token = localStorage.getItem('accessToken')
         if (token == null || token == '') {
@@ -128,7 +131,7 @@ function UserPage() {
                 new_password: newPassword
             }
             const token = localStorage.getItem('accessToken')
-            const response = API.put('/user/password/update', data, {
+            API.put('/user/password/update', data, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                 }
@@ -144,21 +147,6 @@ function UserPage() {
                 // console.log(err.response.status)
                 // console.log(err.response.data)
             })
-            // const response = await fetch(`${baseUrl}/user/password/update`, {
-            //     method: 'PUT',
-            //     headers: {
-            //         "Authorization": `Bearer ${token}`,
-            //         'Content-type': 'application/json; charset=UTF-8'
-            //     },
-            //     body: JSON.stringify(data)
-            // })
-
-            // if (response.status == 200) {
-            //     setUpdatePassword(false)
-            // } else if (response.status == 400) {
-            //     setValidOldPassword(true)
-            //     setValidOldPasswordContent('You old password not correct')
-            // }
         } catch (error) {
             console.error(error)
         }
@@ -182,6 +170,25 @@ function UserPage() {
             setValidConfirmPasswordContent('Password and Confirm password not match')
         }
     }
+    const onChangeInputAvatar = (e) => {
+        e.preventDefault()
+        const file = e.target.files[0]
+        sendUpdateAvatar(file)
+    }
+    const sendUpdateAvatar = (file) => {
+        const form = new FormData()
+        form.append('avatar', file)
+        const token = localStorage.getItem('accessToken')
+        API.put('/user/avatar/update', form, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then(res => {
+            console.log(res)
+        }).catch(err => {
+            console.error(err)
+        })
+    }
     return (
         <>
             <div className="page-heading">
@@ -191,7 +198,8 @@ function UserPage() {
                             <div className="col-12">
                                 <div className="d-flex flex-column align-items-center text-center">
                                     <img src="/assets/images/faces/1.jpg" alt="Admin" className="rounded-circle" width="150" />
-                                    <a role="button" className="btn btn-link my-0">Change Avatar</a>
+                                    <a role="button" onClick={e => activeInputFile.current.click()} className="btn btn-link my-0">Change Avatar</a>
+                                    <input type="file" onChange={e => onChangeInputAvatar(e)} class="form-control" ref={activeInputFile} id="inputGroupFile01" style={{ display: 'none' }}></input>
                                     <div>
                                         <h4>{
                                             username ? username : 'Anonymous'
