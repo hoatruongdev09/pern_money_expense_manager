@@ -7,7 +7,6 @@ import API from '../../Utils/API'
 const TopBar = ({ onActiveSideBar }) => {
     const history = useHistory()
     const [userName, setUserName] = useState('')
-    const [avatar, setAvatar] = useState('')
     const [admin, setAdmin] = useState(false)
 
     const onLogOut = (e) => {
@@ -34,7 +33,6 @@ const TopBar = ({ onActiveSideBar }) => {
             if (response && response.status === 200) {
                 setUserName(response.data.user_name ? response.data.user_name : 'Anonymous')
                 setAdmin(response.data.is_admin)
-                setAvatar(response.data.avatar)
             }
         } catch (err) {
             console.error(err)
@@ -86,7 +84,7 @@ const TopBar = ({ onActiveSideBar }) => {
                                     </div>
                                     <div className="user-img d-flex align-items-center">
                                         <div className="avatar avatar-md">
-                                            <img src={avatar} />
+                                            <img src="/assets/images/faces/1.jpg" />
                                         </div>
                                     </div>
                                 </div>
