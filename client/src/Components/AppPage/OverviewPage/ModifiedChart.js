@@ -15,12 +15,12 @@ function StatisticsChart({ chartName, data }) {
     }
     return (
         <>
-            <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                <div class="card">
+            <div className="col-12 col-sm-4 col-md-4 col-lg-4">
+                <div className="card">
                     <div className="card-header pb-1">
                         <h6 className="float-start">{chartName}</h6>
                     </div>
-                    <div class="card-content">
+                    <div className="card-content">
                         <div className="card-body pt-1 pb-1">
                             <div className="chart-container">
                                 <Doughnut data={data} options={displayOption} />

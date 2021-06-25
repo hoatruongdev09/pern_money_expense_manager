@@ -280,12 +280,12 @@ const Dashboard = ({ }) => {
                         </div>
                     </div>
                     <div className="col-sm-12 col-md-3">
-                        <div class="card">
+                        <div className="card">
                             {/* <div className="card-header pb-1">
                                 <h6 className="float-start">Generate Report</h6>
 
                             </div> */}
-                            <div class="card-content pt-3">
+                            <div className="card-content pt-3">
                                 <div className="card-body pt-1">
                                     <button onClick={e => generateReport(e)} className='btn btn-primary w-100'><FontAwesomeIcon icon={faFileExcel} /> Generate Report</button>
                                 </div>

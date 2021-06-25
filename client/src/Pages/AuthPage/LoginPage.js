@@ -57,7 +57,7 @@ const LoginPage = () => {
                 <div className="col-lg-6 col-12">
                     <div id="auth-left">
                         <div className="auth-logo">
-                            <a href="index.html"><img src="/assets/images/logo/logo.png" alt="Logo" /></a>
+                            <Link to="/"><img src="/assets/images/logo/logo.png" alt="Logo" /></Link>
                         </div>
                         <h1 className="auth-title">Log in.</h1>
                         <p className="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>

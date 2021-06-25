@@ -31,10 +31,11 @@ for (var i = 0; i < sidebarItems.length; i++) {
 // });
 window.addEventListener('resize', (event) => {
     var w = window.innerWidth;
+    const sidebar = document.getElementById('sidebar')
     if (w < 1200) {
-        document.getElementById('sidebar').classList.remove('active');
+        sidebar?.classList.remove('active');
     } else {
-        document.getElementById('sidebar').classList.add('active');
+        sidebar?.classList.add('active');
     }
 });
 let burgerBtn = document.querySelector('.burger-btn')
@@ -50,19 +51,25 @@ if (sidebarHide != null) {
     })
 }
 window.onload = (e) => {
-    document.getElementById('top-bar-toggle-sidebar').addEventListener('click', (e) => {
-        toggleSideBar()
-    })
-    document.getElementById('side-bar-toggle').addEventListener('click', (e) => {
-        toggleSideBar()
-    })
+    const topBarToggleSidebar = document.getElementById('top-bar-toggle-sidebar')
+    if (topBarToggleSidebar != null) {
+        topBarToggleSidebar.addEventListener('click', (e) => {
+            toggleSideBar()
+        })
+    }
+    const topbarToggle = document.getElementById('side-bar-toggle')
+    if (topbarToggle != null) {
+        topbarToggle.addEventListener('click', (e) => {
+            toggleSideBar()
+        })
+    }
 
     checkInitShowSidebar()
 }
 function checkInitShowSidebar() {
     let width = window.innerWidth
     let sidebar = document.getElementById('sidebar')
-    if (width < 1200) {
+    if (sidebar && width < 1200) {
         sidebar.classList.remove('active')
     }
 }

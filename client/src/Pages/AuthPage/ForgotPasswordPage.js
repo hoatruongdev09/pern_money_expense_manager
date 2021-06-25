@@ -9,7 +9,7 @@ const ForgotPasswordPage = () => {
                 <div className="col-lg-6 col-12">
                     <div id="auth-left">
                         <div className="auth-logo">
-                            <a href="index.html"><img src="/assets/images/logo/logo.png" alt="Logo" /></a>
+                            <Link to="/"><img src="/assets/images/logo/logo.png" alt="Logo" /></Link>
                         </div>
                         <h1 className="auth-title">Forgot Password</h1>
                         <p className="auth-subtitle mb-5">Input your email and we will send you reset password link.</p>
@@ -25,7 +25,7 @@ const ForgotPasswordPage = () => {
                         </form>
                         <div className="text-center mt-5 text-lg fs-4">
                             <p className='text-gray-600'>Remember your account? <Link to="/auth/login" className="font-bold">Log in</Link>.
-                        </p>
+                            </p>
                         </div>
                     </div>
                 </div>

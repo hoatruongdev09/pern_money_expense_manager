@@ -8,6 +8,7 @@ function UserPage() {
     const [userAddress, setUserAddress] = useState('')
     const [userEmail, setUserEmail] = useState('')
     const [userPhone, setUserPhone] = useState('')
+    const [userAvatar, setUserAvatar] = useState('')
 
     const [editValueUserName, setEditValueUserName] = useState('')
     const [editValueUserAddress, setEditValueUserAddress] = useState('')
@@ -46,11 +47,12 @@ function UserPage() {
                 console.log(err.response)
             })
             if (response && response.status === 200) {
-                const { activated, is_admin, trial_expired, user_address, user_email, user_name, user_phone } = response.data
+                const { activated, is_admin, trial_expired, user_address, user_email, user_name, user_phone, avatar } = response.data
                 setUserName(user_name != null ? user_name : '')
                 setUserAddress(user_address != null ? user_address : '')
                 setUserEmail(user_email != null ? user_email : '')
                 setUserPhone(user_phone != null ? user_phone : '')
+                setUserAvatar(avatar)
             }
         } catch (err) {
             console.error(err)
@@ -129,7 +131,7 @@ function UserPage() {
                 new_password: newPassword
             }
             const token = localStorage.getItem('accessToken')
-            const response = API.put('/user/password/update', data, {
+            API.put('/user/password/update', data, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                 }
@@ -187,14 +189,13 @@ function UserPage() {
         const file = e.target.files[0]
         const data = new FormData()
         data.append('avatar', file)
-        console.log('he')
         const token = localStorage.getItem('accessToken')
         API.put('/user/avatar/update', data, {
             headers: {
                 "Authorization": `Bearer ${token}`,
             }
         }).then(res => {
-            console.log(res)
+            setUserAvatar(res.data.avatar)
         }).catch(err => {
             console.log(err.response)
         })
@@ -208,7 +209,7 @@ function UserPage() {
                         <div className='row justify-content-center' >
                             <div className="col-12">
                                 <div className="d-flex flex-column align-items-center text-center">
-                                    <img src="/assets/images/faces/1.jpg" alt="Admin" className="rounded-circle" width="150" />
+                                    <img src={userAvatar ? `/public/images/${userAvatar}` : "/assets/images/faces/1.jpg"} alt="Admin" className="rounded-circle" width="150" height="150" />
                                     <a role="button" onClick={e => inputFile.current.click()} className="btn btn-link my-0">Change Avatar</a>
                                     <input type='file' onChange={e => onUploadFile(e)} multiple={false} ref={inputFile} style={{ display: 'none' }}></input>
                                     <div>
@@ -223,9 +224,9 @@ function UserPage() {
                                     <div className="card-body">
                                         {
                                             alertSuccess ?
-                                                <div class={`alert alert-success alert-dismissible show fade`}>
+                                                <div className={`alert alert-success alert-dismissible show fade`}>
                                                     {alertContent}
-                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                 </div> : <></>
                                         }
                                         <form className="form form-horizontal">
@@ -262,12 +263,12 @@ function UserPage() {
                                                             </div>
                                                             <div className="col-md-8 form-group">
                                                                 <input type="password" value={oldPassword} onChange={e => onChangeOldPassword(e)} className={`form-control ${validOldPassword ? 'is-invalid' : 'is-valid'}`} name="password" placeholder="Old Password" />
-                                                                <div class="invalid-feedback">
-                                                                    <i class="bx bx-radio-circle"></i>
+                                                                <div className="invalid-feedback">
+                                                                    <i className="bx bx-radio-circle"></i>
                                                                     {validOldPasswordContent}
                                                                 </div>
-                                                                <div class="valid-feedback">
-                                                                    <i class="bx bx-radio-circle"></i>
+                                                                <div className="valid-feedback">
+                                                                    <i className="bx bx-radio-circle"></i>
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-4">
@@ -275,12 +276,12 @@ function UserPage() {
                                                             </div>
                                                             <div className="col-md-8 form-group">
                                                                 <input type="password" value={newPassword} onChange={e => onChangeNewPassword(e)} className={`form-control ${validNewPassword ? 'is-invalid' : 'is-valid'}`} name="password" placeholder="New Password" />
-                                                                <div class="invalid-feedback">
-                                                                    <i class="bx bx-radio-circle"></i>
+                                                                <div className="invalid-feedback">
+                                                                    <i className="bx bx-radio-circle"></i>
                                                                     {validNewPasswordContent}
                                                                 </div>
-                                                                <div class="valid-feedback">
-                                                                    <i class="bx bx-radio-circle"></i>
+                                                                <div className="valid-feedback">
+                                                                    <i className="bx bx-radio-circle"></i>
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-4">
@@ -288,12 +289,12 @@ function UserPage() {
                                                             </div>
                                                             <div className="col-md-8 form-group">
                                                                 <input type="password" value={confirmPassword} onChange={e => onChangeConfirmPassword(e)} className={`form-control ${validConfirmPassword ? 'is-invalid' : 'is-valid'}`} name="password" placeholder="Confirm Password" />
-                                                                <div class="invalid-feedback">
-                                                                    <i class="bx bx-radio-circle"></i>
+                                                                <div className="invalid-feedback">
+                                                                    <i className="bx bx-radio-circle"></i>
                                                                     {validConfirmPasswordContent}
                                                                 </div>
-                                                                <div class="valid-feedback">
-                                                                    <i class="bx bx-radio-circle"></i>
+                                                                <div className="valid-feedback">
+                                                                    <i className="bx bx-radio-circle"></i>
                                                                 </div>
                                                             </div>
                                                         </> : <></>

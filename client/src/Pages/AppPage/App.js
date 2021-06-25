@@ -83,15 +83,15 @@ const App = () => {
     }
     if (!authenticated) {
         return (
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+            <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
             </div>
         )
     }
     const LoadingScreen = () => {
         return (
-            <button class="btn btn-primary" type="button" disabled="">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <button className="btn btn-primary" type="button" disabled="">
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Loading...
             </button>
         )

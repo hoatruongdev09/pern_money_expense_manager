@@ -8,6 +8,7 @@ const TopBar = ({ onActiveSideBar }) => {
     const history = useHistory()
     const [userName, setUserName] = useState('')
     const [admin, setAdmin] = useState(false)
+    const [avatar, setAvatar] = useState('')
 
     const onLogOut = (e) => {
         e.preventDefault()
@@ -33,6 +34,7 @@ const TopBar = ({ onActiveSideBar }) => {
             if (response && response.status === 200) {
                 setUserName(response.data.user_name ? response.data.user_name : 'Anonymous')
                 setAdmin(response.data.is_admin)
+                setAvatar(response.data.avatar)
             }
         } catch (err) {
             console.error(err)
@@ -84,7 +86,7 @@ const TopBar = ({ onActiveSideBar }) => {
                                     </div>
                                     <div className="user-img d-flex align-items-center">
                                         <div className="avatar avatar-md">
-                                            <img src="/assets/images/faces/1.jpg" />
+                                            <img src={avatar ? `/assets/images/uploads/${avatar}` : "/assets/images/faces/1.jpg"} />
                                         </div>
                                     </div>
                                 </div>

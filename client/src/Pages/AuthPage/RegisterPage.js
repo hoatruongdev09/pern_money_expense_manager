@@ -52,7 +52,7 @@ const RegisterPage = () => {
                 <div className="col-lg-6 col-12">
                     <div id="auth-left">
                         <div className="auth-logo">
-                            <a href="index.html"><img src="/assets/images/logo/logo.png" alt="Logo" /></a>
+                            <Link to="/"><img src="/assets/images/logo/logo.png" alt="Logo" /></Link>
                         </div>
                         <h1 className="auth-title">Sign Up</h1>
                         <p className="auth-subtitle mb-5">Input your data to register to our website.</p>
