@@ -1,5 +1,6 @@
 const db = require('../db')
 const bcrypt = require('bcrypt')
+const { filename } = require('../utils/Resize')
 const getUserInfo = async (user_id) => {
     try {
         const user = await db.query("SELECT * FROM users WHERE user_id=$1", [user_id])
@@ -43,6 +44,14 @@ const updateUserPassword = async (user_id, oldPassword, newPassword) => {
         return updatedCount.rows
     } catch (error) {
         throw error
+    }
+}
+const updateUserAvatar = async (user_id, filename) => {
+    try {
+        const updatePassword = await db.query("UPDATE users SET avatar=$1 WHERE user_id=$2", [filename, user_id])
+        
+    } catch (error) {
+
     }
 }
 module.exports = { getUserInfo, updateUserInfo, updateUserPassword }

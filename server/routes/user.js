@@ -3,6 +3,10 @@ const db = require('../db')
 const error = require('../errors/error')
 const userProvider = require('../provider/user')
 const authorize = require('../middlewares/authorize')
+const upload = require('../middlewares/uploadImageMiddleware')
+const Resize = require('../utils/Resize')
+const path = require('path')
+const url = require('url')
 
 Router.get('/:id', async (req, res) => {
     try {
@@ -72,8 +76,18 @@ Router.put('/password/update', authorize, async (req, res) => {
     }
 })
 
-Router.get('/error/test', (req, res) => {
-    res.status(400).json({ message: 'hey' })
+Router.put('/avatar/update', upload.single('avatar'), async (req, res) => {
+    const imagePath = 'public/images'
+    const fileUpload = new Resize(imagePath)
+    if (!req.file) {
+        return error.badRequest(res, 'Image is not valid')
+    }
+    try {
+        const filename = await fileUpload.save(req.file.buffer)
+        return res.status(200).json({ filename: filename })
+    } catch (err) {
+        error.internalError(res, err.message)
+    }
 })
 
 module.exports = Router

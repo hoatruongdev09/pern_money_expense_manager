@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import API from '../../Utils/API'
 import { baseUrl, createRequest } from '../../Utils/requestManager'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 function UserPage() {
     const [username, setUserName] = useState('')
@@ -31,6 +31,7 @@ function UserPage() {
 
     const [alertSuccess, setAlertSuccess] = useState(false)
     const [alertContent, setAlertContent] = useState('')
+    const inputFile = useRef(null)
     useEffect(async () => {
         const token = localStorage.getItem('accessToken')
         if (token == null || token == '') {
@@ -182,6 +183,23 @@ function UserPage() {
             setValidConfirmPasswordContent('Password and Confirm password not match')
         }
     }
+    const onUploadFile = async (e) => {
+        const file = e.target.files[0]
+        const data = new FormData()
+        data.append('avatar', file)
+        console.log('he')
+        const token = localStorage.getItem('accessToken')
+        API.put('/user/avatar/update', data, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
+        }).then(res => {
+            console.log(res)
+        }).catch(err => {
+            console.log(err.response)
+        })
+    }
+
     return (
         <>
             <div className="page-heading">
@@ -191,7 +209,8 @@ function UserPage() {
                             <div className="col-12">
                                 <div className="d-flex flex-column align-items-center text-center">
                                     <img src="/assets/images/faces/1.jpg" alt="Admin" className="rounded-circle" width="150" />
-                                    <a role="button" className="btn btn-link my-0">Change Avatar</a>
+                                    <a role="button" onClick={e => inputFile.current.click()} className="btn btn-link my-0">Change Avatar</a>
+                                    <input type='file' onChange={e => onUploadFile(e)} multiple={false} ref={inputFile} style={{ display: 'none' }}></input>
                                     <div>
                                         <h4>{
                                             username ? username : 'Anonymous'
