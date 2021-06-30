@@ -16,7 +16,7 @@ const App = () => {
                     <div className={`collapse navbar-collapse`} id="collapser">
                         <ul className="navbar-nav ms-auto">
                             <li className="nav-item"><a className="nav-link" href="#features">Features</a></li>
-                            <li className="nav-item"><a className="nav-link" href="#screenshots">Screenshots</a></li>
+                            <li className="nav-item"><a className="nav-link" href="#getstarted">Get Started</a></li>
                             <li className="nav-item"><a className="nav-link" href="#signup">Contact</a></li>
                         </ul>
                     </div>
@@ -27,46 +27,60 @@ const App = () => {
                     <div className="d-flex justify-content-center">
                         <div className="text-center">
                             <h1 className="mx-auto my-0 text-uppercase"><span style={{ textDecoration: 'underline' }}>SPEND</span>IE</h1>
-                            <h2 className="text-white-50 mx-auto mt-2 mb-5">A free tool for money expense management and analyze.</h2>
+                            <h2 className="text-dark-50 mx-auto mt-2 mb-5">A free tool for money expense management and analyze.</h2>
                             <Link className="btn btn-primary" to="/dashboard">Get Started</Link>
                         </div>
                     </div>
                 </div>
             </header>
-            <section className="projects-section bg-light" id="features">
+            <section className="projects-section bg-white" id="features">
                 <div className="container px-4 px-lg-5">
                     <div className="row gx-0 mb-4 mb-lg-5 align-items-center">
-                        <div className="col-xl-8 col-lg-7"><img className="img-fluid mb-3 mb-lg-0" src="assets/img/bg-masthead.jpg" alt="..." /></div>
+                        <div className="rounded shadow col-xl-8 col-lg-7"><img className="shadow-lg rounded img-fluid mb-3 mb-lg-0" src="assets/img/main-page.png" alt="..." /></div>
                         <div className="col-xl-4 col-lg-5">
                             <div className="featured-text text-center text-lg-left">
-                                <h4>Shoreline</h4>
-                                <p className="text-black-50 mb-0">Grayscale is open source and MIT licensed. This means you can use it for any project - even commercial projects! Download it, customize it, and publish your website!</p>
+                                <h4>Easier to manage</h4>
+                                <p className="text-dark-50 mb-0">Review asset trend in your chart</p>
                             </div>
                         </div>
                     </div>
                     <div className="row gx-0 mb-5 mb-lg-0 justify-content-center">
-                        <div className="col-lg-6"><img className="img-fluid" src="assets/img/demo-image-01.jpg" alt="..." /></div>
+                        <div className="rounded shadow col-lg-6"><img className="shadow rounded img-fluid" src="assets/img/transaction-date-page.png" alt="..." /></div>
                         <div className="col-lg-6">
-                            <div className="bg-black text-center h-100 project">
+                            <div className="bg-white text-center h-100 project">
                                 <div className="d-flex h-100">
                                     <div className="project-text w-100 my-auto text-center text-lg-left">
-                                        <h4 className="text-black">Misty</h4>
-                                        <p className="mb-0 text-black-50">An example of where you can put an image of a project, or anything else, along with a description.</p>
-                                        <hr className="d-none d-lg-block mb-0 ms-0" />
+                                        <h4 className="text-dark">Easy content access</h4>
+                                        <p className="mb-0 text-dark-50">Weekly, Monthly total and budget are provided</p>
+                                        <hr className="d-none d-lg-block mb-0 ms-0 bg-white" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="row gx-0 justify-content-center">
-                        <div className="col-lg-6"><img className="img-fluid" src="assets/img/demo-image-02.jpg" alt="..." /></div>
+                        <div className="rounded shadow col-lg-6"><img className="shadow rounded img-fluid" src="assets/img/transaction-create.png" alt="..." /></div>
                         <div className="col-lg-6 order-lg-first">
                             <div className="bg-black text-center h-100 project">
                                 <div className="d-flex h-100">
                                     <div className="project-text w-100 my-auto text-center text-lg-right">
-                                        <h4 className="text-black">Mountains</h4>
-                                        <p className="mb-0 text-black-50">Another example of a project with its respective description. These sections work well responsively as well, try this theme on a small screen!</p>
-                                        <hr className="d-none d-lg-block mb-0 me-0" />
+                                        <h4 className="text-dark">Keep your note</h4>
+                                        <p className="mb-0 text-dark-50">Save receipt or memories together</p>
+                                        <hr className="d-none d-lg-block mb-0 me-0 bg-white" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row gx-0 mb-5 mb-lg-0 justify-content-center">
+                        <div className="rounded shadow col-lg-6"><img className="shadow rounded img-fluid" src="assets/img/category-page.png" alt="..." /></div>
+                        <div className="col-lg-6">
+                            <div className="bg-black text-center h-100 project">
+                                <div className="d-flex h-100">
+                                    <div className="project-text w-100 my-auto text-center text-lg-left">
+                                        <h4 className="text-dark">Unique style</h4>
+                                        <p className="mb-0 text-dark-50">Create and manage your own habits</p>
+                                        <hr className="d-none d-lg-block mb-0 ms-0 bg-whte" />
                                     </div>
                                 </div>
                             </div>
@@ -74,22 +88,25 @@ const App = () => {
                     </div>
                 </div>
             </section>
-            <section className="about-section text-center" id="screenshots">
-                <div className="container px-4 px-lg-5">
-                    <div className="row gx-4 gx-lg-5 justify-content-center">
-                        <div className="col-lg-8">
-                            <h2 className="text-white mb-4">Built with Bootstrap 5</h2>
-                            <p className="text-white-50">
-                                Grayscale is a free Bootstrap theme created by Start Bootstrap. It can be yours right now, simply download the template on
-                                <a href="https://startbootstrap.com/theme/grayscale/">the preview page.</a>
-                                The theme is open source, and you can use it for any purpose, personal or commercial.
-                            </p>
+            <section className="text-center background-red" id="getstarted">
+                <div className="container about-section ">
+                    <div className="row">
+                        <div className="col-lg-5 text-center">
+                            <h2 className="text-white mb-2">Get Started</h2>
+                            <p className="text-white-50">Manage your asset more conveniently</p>
+                            <Link className="btn btn-primary" to="/dashboard">Get Started</Link>
                         </div>
+                        <div className="col-lg-5">
+
+                        </div>
+
                     </div>
-                    <img className="img-fluid" src="assets/img/ipad.png" alt="..." />
+                </div>
+                <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                    <img className="img-fluid" className="image-get-started" src="assets/img/main-page-croped.png" alt="..." />
                 </div>
             </section>
-            <section className="signup-section" id="signup">
+            <section className="signup-section bg-dark" id="signup">
                 <div className="container px-4 px-lg-5">
                     <div className="row gx-4 gx-lg-5">
                         <div className="col-md-10 col-lg-8 mx-auto text-center">
@@ -103,7 +120,7 @@ const App = () => {
                     </div>
                 </div>
             </section>
-            <section className="contact-section bg-black">
+            <section className="contact-section bg-dark">
                 <div className="container px-4 px-lg-5">
                     <div className="row gx-4 gx-lg-5">
                         <div className="col-md-4 mb-3 mb-md-0">
@@ -137,14 +154,14 @@ const App = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="social d-flex justify-content-center">
+                    <div className="social d-flex justify-content-center bg-dark">
                         <a className="mx-2" href="#!"><i className="fab fa-twitter"></i></a>
                         <a className="mx-2" href="#!"><i className="fab fa-facebook-f"></i></a>
                         <a className="mx-2" href="#!"><i className="fab fa-github"></i></a>
                     </div>
                 </div>
             </section>
-            <footer className="footer bg-black small text-center text-white-50"><div className="container px-4 px-lg-5">Copyright &copy; Your Website 2021</div></footer>
+            <footer className="footer bg-dark text-center text-white-50"><div className="container px-4 px-lg-5">Copyright &copy; Your Website 2021</div></footer>
         </div>
     )
 }

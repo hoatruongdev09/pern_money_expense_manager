@@ -139,18 +139,22 @@
     font-size: 1.25rem;
   }
 }
-
+.background-red {
+  background-color: #fd6255;
+  background-image: url("/assets/img//bg_section5_1.png"),
+    url("/assets//img/bg_section5_2.png");
+  background-repeat: no-repeat no-repeat;
+  background-size: auto 100%;
+  background-position-x: left, right !important;
+  background-position-y: center, center !important;
+}
 .about-section {
-  padding-top: 10rem;
-  background: linear-gradient(
-    to bottom,
-    #000 0%,
-    rgba(0, 0, 0, 0.9) 75%,
-    rgba(0, 0, 0, 0.8) 100%
-  );
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  z-index: 50;
 }
 .about-section p {
-  margin-bottom: 5rem;
+  /* margin-bottom: 5rem; */
 }
 
 .projects-section {
@@ -158,6 +162,21 @@
 }
 .projects-section .featured-text {
   padding: 2rem;
+}
+.image-get-started {
+  position: absolute;
+  bottom: 0;
+  right: 50px;
+  width: 550px;
+}
+@media (max-width: 1200px) {
+  .image-get-started {
+    position: absolute;
+    bottom: 0;
+    right: 50px;
+    width: 0px;
+    z-index: 1;
+  }
 }
 @media (min-width: 992px) {
   .projects-section .featured-text {
@@ -182,13 +201,7 @@
 
 .signup-section {
   padding: 10rem 0;
-  background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.1) 0%,
-      rgba(0, 0, 0, 0.5) 75%,
-      #000 100%
-    ),
-    url("../assets/img/bg-signup.jpg");
+  background: url("../assets/img/bg-signup.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
